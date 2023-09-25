@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+</style>
+<body>
+
+    <H1>PROGRAM TO DISPLAY SAFARICOM UNLIMITED SMS BUNDLE (*188#)</H1>
+
+    <script>
+
+        let messageCode = parseInt( prompt("Please insert the Safaricom code here: "));
+
+        if(messageCode == 188){
+            // First Layer
+            alert("\n 0: Sh.20 (30minutes, 3 hrs)  \n 1: Unlimited SMS   \n 2: Daily SMS   \n 3: Wekkly SMS   \n 4: Monthly SMS   \n 5: My5 Unlimited SMS  \n 6: Buy for  other Number  \n 7: Check Balance  \n 8: Chat Ibambe ");
+             
+            // option 
+            let option = parseInt(prompt("0.Please Insert you preffered Option here: "));
+            
+            // section: zero
+            if(option == 0){
+                alert("You have successfully selected the sh.20 (30 minutes, 3 hrs) offer");
+
+            // section: 1 
+                }if(option == 1){
+                    alert("\n 1:Unlimited SMS daily at 20 shillings     \n  2: Unlimited SMS Weekly at 50 shillings  ");
+
+                    let option1 = parseInt(prompt("1.Please Insert your Preffered option: "));
+                    if(option1 == 1){
+                        alert("You have successfully selected the Unlimited SMS daily at 20 shillings ");
+                    }else if( option1 == 2){
+                        alert("You have successfully selected the Unlimited SMS Weekly at 50 shillings ");
+                    }else{alert("Section 1: Invalid Input please try again ")};
+            // section: 2         
+                } if(option == 2) {
+                    alert("Please select your Options:   \n 1: 20 sms daily at 5 shillings    \n 2: 200 sms daily at 10 shillings    \n 3: Unlimited sms daily at 20 shillings   \n 4: Unsubscribe ");
+                    let option2 = parseInt(prompt("2.Please Insert your Preffered option: "));
+                    if(option2 == 1){
+                        alert("You have successfully selected the 20 sms daily at 5 shillings ");
+                    }else if(option2 == 2){
+                        alert("You have successfully selected the 200 sms daily at 10 shillings");
+                    }else if(option2 == 3){
+                        alert("You have selected the Unlimited sms daily at 20 shillings");
+                    }else if(option2 == 4){
+                        alert("You have been successfully unsubscribed");
+                    }else{alert("Section 2: Invalid Input please try again ")};
+            // section: 3        
+                } if(option == 3) {
+                    alert("Please select your Options:   \n 1: 100 sms weekly at 20 shillings    \n 2: 1000 sms weekly at 30 shillings    \n 3: Unlimited sms weekly at 50 shillings   \n 4: Unsubscribe ");
+                    let option3 = parseInt(prompt("3.Please Insert your Preffered option: "));
+                    if(option3 == 1){
+                        alert("You have successfully selected the 100 sms weekly at 20 shillings ");
+                    }else if(option3 == 2){
+                        alert("You have successfully selected the 1000 sms weekly at 30 shillings");
+                    }else if(option3 == 3){
+                        alert("You have selected the Unlimited sms weekly at 50 shillings");
+                    }else if(option3 == 4){
+                        alert("You have been successfully unsubscribed");
+                    }else{alert("Section 3: Invalid Input please try again ")};
+            // section: 4            
+                } if(option == 4) {
+                    alert("Please select your Options:   \n 1: 1500 sms Monthly at 100 shillings   \n 2: 3500 sms Monthly at 30 shillings   \n 3: Unsubscribe ");
+                    let option4 = parseInt(prompt("4.Please Insert your Preffered option: "));
+                    if(option4 == 1){
+                        alert("You have successfully selected the 1500 sms Monthly at 100 shillings ");
+                    }else if(option4 == 2){
+                        alert("You have successfully selected the 3500 sms weekly at 30 shillings");
+                    }else if(option4 == 3){
+                        alert("You have been successfully unsubscribed");
+                    }else{alert("Section 4: Invalid Input please try again ")};  
+            // section: 5         
+                } if(option == 5) {
+                    alert("Welcome to My5 Unlimited SMS Add 5 numbers under option 1 to enjoy unlimited SMS to your 5 Favorite numbers ");
+                    let option5 = parseInt(prompt("5.Please Insert your Preffered option: "));
+                    if(option5 == 1){
+                        alert("Manage My5 List");
+                    }else if(option5 == 2){
+                        alert("FAQS");
+                    }else{alert("Section 5: Invalid Input please try again ")};
+            // section: 6 
+                }if(option == 6) {
+                    alert("Please select your Options:   \n 1: Buy Daily SMS Bundle   \n 2: Buy Weekly SMS Bundle \n 3: Buy Monthly SMS Bundle  \n 4: Unsubscribe ");
+                    let option6 = parseInt(prompt("6.Please Insert your Preffered option: "));
+                    if(option6 == 1){
+                        alert("You have successfully selected the Buy Daily SMS Bundle offer ");
+                    }else if(option6 == 2){
+                        alert("You have successfully selected the Buy Weekly SMS Bundle offer ");
+                    }else if(option6 == 3){
+                        alert("You have successfully selected the Buy Monthly SMS Bundle offer ");
+                    }else if(option6 == 4){
+                        alert("You have  been successfully unsubscribed");
+                    }else{alert("Section 6: Invalid Input please try again ")};
+            // section: 7     
+                } if (option == 7){
+                    alert(" \n You will receive an SMS shortly. \n Dial 200 for other services. \n Thank you!");
+            // section: 8        
+                } if (option == 8){
+                    alert("\n Please select your Options:  1: Check My SMS target  \n 2: Check my daily SMS Spend   \n 3: Check my SMS Bonus Balance \n 4: Unsubscribe");
+                    let option8 = parseInt("Please insert your preffered Option");
+                    if(option8 == 1){
+                        alert("Your SMS target will be sent shortly");
+                    }else if(option8 == 2){
+                        alert("Your daily SMS expenditure will be sent shortly");
+                    }else if(option8 == 3){
+                        alert("Your SMS Bonus balance will be sent shortly");
+                    }else if(option8 == 4){
+                        alert("Your have been successfully Unsubscribed");
+                    }else{alert("Section 8: Invalid Input please try again ")};
+                }           
+            
+        } else{alert("Kindly type in the correct Information")};
+
+    </script>
+
+
+        
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+</body>
+</html>
+    
+</body>
+</html>
