@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive Safaricom SMS Bundle Simulator - Explore SMS bundle options through an intuitive USSD interface simulation">
+    <meta name="description"
+        content="Interactive Safaricom SMS Bundle Simulator - Explore SMS bundle options through an intuitive USSD interface simulation">
     <meta name="keywords" content="Safaricom, SMS bundles, USSD simulator, Kenya mobile services">
     <meta name="author" content="Martin888Maina">
     <title>Safaricom SMS Bundle Simulator | *188#</title>
-    
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap"
+        rel="stylesheet">
+
     <style>
         /* CSS Variables for the unique color scheme */
         :root {
@@ -30,13 +37,13 @@
             --shadow-md: 0 4px 16px rgba(224, 120, 86, 0.15);
             --shadow-lg: 0 8px 32px rgba(224, 120, 86, 0.2);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-light) 100%);
@@ -47,7 +54,7 @@
             padding: 20px;
             color: var(--text-dark);
         }
-        
+
         .container {
             max-width: 1200px;
             width: 100%;
@@ -57,14 +64,14 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        
+
         /* Header Section */
         .header-section {
             flex: 1;
             min-width: 300px;
             max-width: 500px;
         }
-        
+
         .header-section h1 {
             font-family: 'Poppins', sans-serif;
             font-size: 2.5rem;
@@ -72,19 +79,19 @@
             margin-bottom: 1rem;
             line-height: 1.2;
         }
-        
+
         .header-section p {
             font-size: 1.1rem;
             color: var(--text-medium);
             line-height: 1.6;
             margin-bottom: 1.5rem;
         }
-        
+
         .feature-list {
             list-style: none;
             margin-top: 2rem;
         }
-        
+
         .feature-list li {
             padding: 0.75rem 0;
             color: var(--text-medium);
@@ -92,14 +99,14 @@
             align-items: center;
             gap: 0.75rem;
         }
-        
+
         .feature-list li:before {
             content: "✓";
             color: var(--secondary-mint);
             font-weight: bold;
             font-size: 1.25rem;
         }
-        
+
         /* Phone Simulator */
         .phone-simulator {
             background: var(--white);
@@ -109,14 +116,14 @@
             width: 380px;
             position: relative;
         }
-        
+
         .phone-frame {
             background: linear-gradient(135deg, var(--text-dark) 0%, #1a1f23 100%);
             border-radius: 30px;
             padding: 16px;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
         }
-        
+
         .phone-notch {
             background: #0a0c0e;
             height: 25px;
@@ -124,7 +131,7 @@
             margin: 0 auto 12px;
             border-radius: 0 0 20px 20px;
         }
-        
+
         /* USSD Screen */
         .ussd-screen {
             background: var(--bg-light);
@@ -133,44 +140,45 @@
             padding: 24px;
             position: relative;
             overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
-        
+
         .screen-header {
             text-align: center;
             padding-bottom: 16px;
             border-bottom: 2px solid var(--primary-coral);
             margin-bottom: 20px;
         }
-        
+
         .screen-header h2 {
             font-family: 'Poppins', sans-serif;
             font-size: 1.25rem;
             color: var(--primary-dark);
             margin-bottom: 4px;
         }
-        
+
         .screen-header .code {
             font-size: 0.9rem;
             color: var(--text-medium);
             font-weight: 500;
         }
-        
+
         .menu-content {
             animation: slideIn 0.3s ease-out;
         }
-        
+
         @keyframes slideIn {
             from {
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .menu-item {
             background: var(--white);
             padding: 14px 16px;
@@ -183,13 +191,13 @@
             align-items: center;
             gap: 12px;
         }
-        
+
         .menu-item:hover {
             transform: translateX(4px);
             border-color: var(--primary-coral);
             box-shadow: var(--shadow-sm);
         }
-        
+
         .menu-item-number {
             background: linear-gradient(135deg, var(--primary-coral), var(--primary-dark));
             color: var(--white);
@@ -203,20 +211,20 @@
             font-size: 0.9rem;
             flex-shrink: 0;
         }
-        
+
         .menu-item-text {
             color: var(--text-dark);
             font-size: 0.95rem;
             line-height: 1.4;
         }
-        
+
         /* Input Section */
         .input-section {
             margin-top: 20px;
             padding-top: 20px;
-            border-top: 1px solid rgba(0,0,0,0.08);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
         }
-        
+
         .input-display {
             background: var(--white);
             padding: 14px;
@@ -232,14 +240,14 @@
             color: var(--text-dark);
             box-shadow: var(--shadow-sm);
         }
-        
+
         /* Action Buttons */
         .action-buttons {
             display: flex;
             gap: 10px;
             margin-top: 12px;
         }
-        
+
         .btn {
             flex: 1;
             padding: 14px;
@@ -251,38 +259,38 @@
             transition: all 0.2s ease;
             font-family: 'Inter', sans-serif;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, var(--secondary-mint), var(--secondary-dark));
             color: var(--white);
             box-shadow: var(--shadow-sm);
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
-        
+
         .btn-secondary {
             background: var(--white);
             color: var(--text-dark);
             border: 2px solid var(--primary-coral);
         }
-        
+
         .btn-secondary:hover {
             background: var(--primary-coral);
             color: var(--white);
         }
-        
+
         .btn:active {
             transform: scale(0.98);
         }
-        
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
         /* Result Message */
         .result-message {
             background: linear-gradient(135deg, var(--secondary-mint), var(--secondary-dark));
@@ -294,19 +302,19 @@
             animation: slideIn 0.3s ease-out;
             box-shadow: var(--shadow-md);
         }
-        
+
         .result-message h3 {
             font-family: 'Poppins', sans-serif;
             font-size: 1.1rem;
             margin-bottom: 8px;
         }
-        
+
         .result-message p {
             font-size: 0.95rem;
             line-height: 1.5;
             opacity: 0.95;
         }
-        
+
         /* Error Message */
         .error-message {
             background: linear-gradient(135deg, #FF6B6B, #E05252);
@@ -317,32 +325,42 @@
             margin: 16px 0;
             animation: shake 0.4s ease-out;
         }
-        
+
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            75% { transform: translateX(8px); }
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-8px);
+            }
+
+            75% {
+                transform: translateX(8px);
+            }
         }
-        
+
         /* Welcome Screen */
         .welcome-screen {
             text-align: center;
             padding: 40px 20px;
         }
-        
+
         .welcome-screen h3 {
             font-family: 'Poppins', sans-serif;
             color: var(--primary-dark);
             font-size: 1.4rem;
             margin-bottom: 16px;
         }
-        
+
         .welcome-screen p {
             color: var(--text-medium);
             line-height: 1.6;
             margin-bottom: 24px;
         }
-        
+
         .start-btn {
             background: linear-gradient(135deg, var(--primary-coral), var(--primary-dark));
             color: var(--white);
@@ -355,41 +373,41 @@
             transition: all 0.3s ease;
             box-shadow: var(--shadow-md);
         }
-        
+
         .start-btn:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-lg);
         }
-        
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
                 gap: 30px;
             }
-            
+
             .header-section h1 {
                 font-size: 2rem;
             }
-            
+
             .phone-simulator {
                 width: 100%;
                 max-width: 380px;
             }
-            
+
             .feature-list {
                 margin-top: 1.5rem;
             }
         }
-        
+
         @media (max-width: 480px) {
             .header-section h1 {
                 font-size: 1.75rem;
             }
-            
+
             .phone-simulator {
                 padding: 12px;
             }
-            
+
             .ussd-screen {
                 padding: 16px;
                 min-height: 380px;
@@ -397,13 +415,15 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Header Information Section -->
         <div class="header-section">
             <h1>Safaricom SMS Bundle Simulator</h1>
-            <p>Experience the complete Safaricom SMS bundle menu interface through this interactive simulator. Navigate through all available options just like dialing *188#.</p>
-            
+            <p>Experience the complete Safaricom SMS bundle menu interface through this interactive simulator. Navigate
+                through all available options just like dialing *188#.</p>
+
             <ul class="feature-list">
                 <li>Interactive USSD interface simulation</li>
                 <li>All SMS bundle options included</li>
@@ -411,7 +431,7 @@
                 <li>Responsive mobile-friendly design</li>
             </ul>
         </div>
-        
+
         <!-- Phone Simulator -->
         <div class="phone-simulator">
             <div class="phone-frame">
@@ -422,7 +442,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         /**
          * SafaricomUSSD Class
@@ -435,11 +455,11 @@
                 this.currentMenu = 'welcome';
                 this.menuHistory = [];
                 this.userInput = '';
-                
+
                 // Initialize the application
                 this.showWelcomeScreen();
             }
-            
+
             /**
              * Display the initial welcome screen
              * This serves as the entry point for the application
@@ -455,7 +475,7 @@
                     </div>
                 `;
             }
-            
+
             /**
              * Main menu display
              * Shows all primary SMS bundle categories
@@ -463,7 +483,7 @@
             showMainMenu() {
                 this.currentMenu = 'main';
                 this.menuHistory = [];
-                
+
                 const menuOptions = [
                     { num: 0, text: 'Sh.20 (30 minutes, 3 hrs)' },
                     { num: 1, text: 'Unlimited SMS' },
@@ -475,10 +495,10 @@
                     { num: 7, text: 'Check Balance' },
                     { num: 8, text: 'Chat Ibambe' }
                 ];
-                
+
                 this.renderMenu('Safaricom SMS Bundles', '*188#', menuOptions);
             }
-            
+
             /**
              * Generic menu renderer
              * Creates the visual menu structure with clickable items
@@ -491,7 +511,7 @@
                     </div>
                     <div class="menu-content">
                 `;
-                
+
                 options.forEach(option => {
                     menuHTML += `
                         <div class="menu-item" onclick="ussdApp.selectOption(${option.num})">
@@ -500,9 +520,9 @@
                         </div>
                     `;
                 });
-                
+
                 menuHTML += `</div>`;
-                
+
                 // Add back button if not on main menu
                 if (this.menuHistory.length > 0) {
                     menuHTML += `
@@ -512,19 +532,19 @@
                         </div>
                     `;
                 }
-                
+
                 this.screen.innerHTML = menuHTML;
             }
-            
+
             /**
              * Handle option selection
              * Routes to appropriate submenu or displays result
              */
             selectOption(optionNum) {
                 this.menuHistory.push(this.currentMenu);
-                
+
                 // Route based on current menu and selected option
-                switch(this.currentMenu) {
+                switch (this.currentMenu) {
                     case 'main':
                         this.handleMainMenuSelection(optionNum);
                         break;
@@ -553,13 +573,13 @@
                         this.showError('Invalid menu state');
                 }
             }
-            
+
             /**
              * Process main menu selections
              * Determines which submenu or action to display
              */
             handleMainMenuSelection(option) {
-                switch(option) {
+                switch (option) {
                     case 0:
                         this.showResult(
                             'Bundle Selected',
@@ -634,7 +654,7 @@
                         this.showError('Invalid option selected. Please try again.');
                 }
             }
-            
+
             /**
              * Handle Unlimited SMS submenu selections
              */
@@ -643,14 +663,14 @@
                     1: 'You have successfully selected the Unlimited SMS daily at Ksh 20.',
                     2: 'You have successfully selected the Unlimited SMS Weekly at Ksh 50.'
                 };
-                
+
                 if (messages[option]) {
                     this.showResult('Bundle Activated', messages[option]);
                 } else {
                     this.showError('Invalid selection. Please choose option 1 or 2.');
                 }
             }
-            
+
             /**
              * Handle Daily SMS submenu selections
              */
@@ -661,7 +681,7 @@
                     3: 'You have successfully selected Unlimited SMS daily at Ksh 20.',
                     4: 'You have been successfully unsubscribed from this service.'
                 };
-                
+
                 if (messages[option]) {
                     const title = option === 4 ? 'Unsubscribed' : 'Bundle Activated';
                     this.showResult(title, messages[option]);
@@ -669,7 +689,7 @@
                     this.showError('Invalid selection. Please choose a valid option.');
                 }
             }
-            
+
             /**
              * Handle Weekly SMS submenu selections
              */
@@ -680,7 +700,7 @@
                     3: 'You have successfully selected Unlimited SMS weekly at Ksh 50.',
                     4: 'You have been successfully unsubscribed from this service.'
                 };
-                
+
                 if (messages[option]) {
                     const title = option === 4 ? 'Unsubscribed' : 'Bundle Activated';
                     this.showResult(title, messages[option]);
@@ -688,7 +708,7 @@
                     this.showError('Invalid selection. Please choose a valid option.');
                 }
             }
-            
+
             /**
              * Handle Monthly SMS submenu selections
              */
@@ -698,7 +718,7 @@
                     2: 'You have successfully selected 3500 SMS Monthly at Ksh 200.',
                     3: 'You have been successfully unsubscribed from this service.'
                 };
-                
+
                 if (messages[option]) {
                     const title = option === 3 ? 'Unsubscribed' : 'Bundle Activated';
                     this.showResult(title, messages[option]);
@@ -706,7 +726,7 @@
                     this.showError('Invalid selection. Please choose a valid option.');
                 }
             }
-            
+
             /**
              * Handle My5 Unlimited SMS selections
              */
@@ -715,14 +735,14 @@
                     1: 'Manage My5 List: Add 5 numbers under this option to enjoy unlimited SMS to your 5 favorite numbers.',
                     2: 'FAQs: Visit our website or customer care for frequently asked questions about My5 service.'
                 };
-                
+
                 if (messages[option]) {
                     this.showResult('My5 Service', messages[option]);
                 } else {
                     this.showError('Invalid selection. Please choose option 1 or 2.');
                 }
             }
-            
+
             /**
              * Handle Buy for Other Number selections
              */
@@ -733,7 +753,7 @@
                     3: 'You have successfully selected to buy a Monthly SMS Bundle for another number.',
                     4: 'You have been successfully unsubscribed from this service.'
                 };
-                
+
                 if (messages[option]) {
                     const title = option === 4 ? 'Unsubscribed' : 'Gift Bundle';
                     this.showResult(title, messages[option]);
@@ -741,7 +761,7 @@
                     this.showError('Invalid selection. Please choose a valid option.');
                 }
             }
-            
+
             /**
              * Handle Chat Ibambe selections
              */
@@ -752,7 +772,7 @@
                     3: 'Your SMS Bonus balance will be sent to you shortly via SMS.',
                     4: 'You have been successfully unsubscribed from Chat Ibambe service.'
                 };
-                
+
                 if (messages[option]) {
                     const title = option === 4 ? 'Unsubscribed' : 'Information Request';
                     this.showResult(title, messages[option]);
@@ -760,7 +780,7 @@
                     this.showError('Invalid selection. Please choose a valid option.');
                 }
             }
-            
+
             /**
              * Display success/result message
              */
@@ -779,7 +799,7 @@
                     </div>
                 `;
             }
-            
+
             /**
              * Display error message
              */
@@ -797,7 +817,7 @@
                     </div>
                 `;
             }
-            
+
             /**
              * Navigate back to previous menu
              */
@@ -805,7 +825,7 @@
                 if (this.menuHistory.length > 0) {
                     const previousMenu = this.menuHistory.pop();
                     this.currentMenu = previousMenu;
-                    
+
                     // Redisplay the appropriate menu based on history
                     if (previousMenu === 'main') {
                         this.showMainMenu();
@@ -818,9 +838,10 @@
                 }
             }
         }
-        
+
         // Initialize the application when page loads
         const ussdApp = new SafaricomUSSD();
     </script>
 </body>
+
 </html>
