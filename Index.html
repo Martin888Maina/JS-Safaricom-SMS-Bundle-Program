@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* ── design tokens ──────────────────────────────────────── */
+        /* ── design tokens ──────────────────────────────────────────── */
         :root {
             --coral:      #E07856;
             --coral-dark: #D35F3C;
@@ -42,7 +42,7 @@
             color: var(--text);
         }
 
-        /* ── top nav ─────────────────────────────────────────────── */
+        /* ── top nav ────────────────────────────────────────────────── */
         .top-bar {
             background: var(--white);
             border-bottom: 1px solid var(--border);
@@ -122,6 +122,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 6px 14px;
+            transition: background 0.3s;
         }
 
         .balance-chip-label {
@@ -134,9 +135,22 @@
             font-size: 0.9rem;
             font-weight: 700;
             color: var(--text);
+            transition: color 0.3s;
         }
 
-        /* ── layout ──────────────────────────────────────────────── */
+        /* flash green when balance updates */
+        .balance-chip-amount.updated {
+            color: #1A7A4A;
+            animation: balanceFlash 1.2s ease-out forwards;
+        }
+
+        @keyframes balanceFlash {
+            0%   { color: #1A7A4A; }
+            80%  { color: #1A7A4A; }
+            100% { color: var(--text); }
+        }
+
+        /* ── layout ─────────────────────────────────────────────────── */
         .app-body {
             max-width: 1100px;
             margin: 0 auto;
@@ -146,7 +160,7 @@
         .view { display: none; }
         .view.active { display: block; }
 
-        /* ── WEB MODE ────────────────────────────────────────────── */
+        /* ── WEB MODE ────────────────────────────────────────────────── */
         .web-hero {
             background: var(--white);
             border-radius: var(--radius);
@@ -228,6 +242,54 @@
 
         .acct-item .acct-value.balance-positive { color: #1A7A4A; }
 
+        /* top-up row inside account strip */
+        .topup-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .topup-input {
+            width: 100px;
+            height: 34px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            color: var(--text);
+            background: var(--white);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .topup-input:focus { border-color: var(--coral); }
+
+        .topup-btn {
+            height: 34px;
+            padding: 0 14px;
+            background: var(--white);
+            color: var(--coral-dark);
+            border: 1px solid var(--coral);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+        }
+
+        .topup-btn:hover { background: var(--coral); color: var(--white); }
+
+        .topup-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
         .category-tabs {
             display: flex;
             gap: 4px;
@@ -252,10 +314,7 @@
             color: var(--text-mid);
         }
 
-        .cat-tab.active {
-            background: var(--coral);
-            color: var(--white);
-        }
+        .cat-tab.active { background: var(--coral); color: var(--white); }
 
         .bundle-grid {
             display: grid;
@@ -272,7 +331,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 20px;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
             position: relative;
             overflow: hidden;
         }
@@ -280,6 +339,7 @@
         .bundle-card:hover {
             border-color: var(--coral);
             box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
         .bundle-card::before {
@@ -339,10 +399,26 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.15s, transform 0.1s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .buy-btn:hover { background: var(--coral-dark); }
-        .buy-btn:active { transform: scale(0.98); }
+        .buy-btn:hover  { background: var(--coral-dark); }
+        .buy-btn:active { transform: scale(0.97); }
+
+        /* ripple on buy-btn click */
+        .buy-btn .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.35);
+            transform: scale(0);
+            animation: rippleAnim 0.5s linear;
+            pointer-events: none;
+        }
+
+        @keyframes rippleAnim {
+            to { transform: scale(4); opacity: 0; }
+        }
 
         .info-strip {
             background: var(--white);
@@ -356,7 +432,56 @@
             margin-bottom: 20px;
         }
 
-        /* ── toast ───────────────────────────────────────────────── */
+        /* ── purchase history panel ─────────────────────────────────── */
+        .history-panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-top: 8px;
+        }
+
+        .history-panel-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px;
+        }
+
+        .history-empty {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--bg-page);
+            border-radius: 7px;
+            font-size: 0.82rem;
+            animation: historySlideIn 0.25s ease-out;
+        }
+
+        @keyframes historySlideIn {
+            from { opacity: 0; transform: translateX(-8px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .history-bundle { font-weight: 600; color: var(--text); }
+        .history-meta   { color: var(--text-muted); font-size: 0.76rem; }
+        .history-price  { font-weight: 700; color: var(--coral-dark); }
+
+        /* ── toast ───────────────────────────────────────────────────── */
         .toast-container {
             position: fixed;
             bottom: 28px;
@@ -381,16 +506,17 @@
             pointer-events: auto;
         }
 
-        .toast.error { border-left-color: #D32F2F; }
-        .toast-title { font-weight: 600; font-size: 0.875rem; margin-bottom: 3px; color: var(--text); }
-        .toast-body  { font-size: 0.82rem; color: var(--text-mid); line-height: 1.5; }
+        .toast.error    { border-left-color: #D32F2F; }
+        .toast.warning  { border-left-color: #E07000; }
+        .toast-title    { font-weight: 600; font-size: 0.875rem; margin-bottom: 3px; color: var(--text); }
+        .toast-body     { font-size: 0.82rem; color: var(--text-mid); line-height: 1.5; }
 
         @keyframes toastIn {
             from { opacity: 0; transform: translateX(20px); }
             to   { opacity: 1; transform: translateX(0); }
         }
 
-        /* ── web confirm modal ───────────────────────────────────── */
+        /* ── web confirm modal ───────────────────────────────────────── */
         .modal-backdrop {
             display: none;
             position: fixed;
@@ -471,33 +597,21 @@
         .modal-actions { display: flex; gap: 10px; }
 
         .modal-cancel {
-            flex: 1;
-            padding: 11px;
-            background: var(--white);
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: 7px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: border-color 0.15s;
+            flex: 1; padding: 11px;
+            background: var(--white); color: var(--text);
+            border: 1px solid var(--border); border-radius: 7px;
+            font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600;
+            cursor: pointer; transition: border-color 0.15s;
         }
 
         .modal-cancel:hover { border-color: var(--coral); }
 
         .modal-confirm {
-            flex: 1;
-            padding: 11px;
-            background: var(--coral);
-            color: var(--white);
-            border: none;
-            border-radius: 7px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.15s;
+            flex: 1; padding: 11px;
+            background: var(--coral); color: var(--white);
+            border: none; border-radius: 7px;
+            font-family: 'Inter', sans-serif; font-size: 0.875rem; font-weight: 600;
+            cursor: pointer; transition: background 0.15s;
         }
 
         .modal-confirm:hover { background: var(--coral-dark); }
@@ -511,8 +625,7 @@
         .processing-state.active { display: block; }
 
         .spinner {
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             border: 3px solid var(--border);
             border-top-color: var(--coral);
             border-radius: 50%;
@@ -522,20 +635,75 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .processing-state p {
-            font-size: 0.875rem;
-            color: var(--text-mid);
-        }
-
+        .processing-state p { font-size: 0.875rem; color: var(--text-mid); }
         .modal-form-content { display: block; }
 
-        /* ── USSD MODE ────────────────────────────────────────────── */
+        /* ── USSD MODE ───────────────────────────────────────────────── */
         .ussd-view {
             display: flex;
             flex-direction: column;
             align-items: center;
             padding-top: 12px;
         }
+
+        /* control panel above phone */
+        .ussd-controls {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            max-width: 480px;
+            width: 100%;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .latency-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-mid);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* custom toggle switch */
+        .toggle-switch {
+            position: relative;
+            width: 36px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: var(--border);
+            border-radius: 20px;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            left: 2px; top: 2px;
+            width: 16px; height: 16px;
+            background: var(--white);
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toggle-switch input:checked + .toggle-track { background: var(--coral); }
+        .toggle-switch input:checked + .toggle-track::after { transform: translateX(16px); }
 
         .ussd-instructions {
             background: var(--white);
@@ -544,7 +712,7 @@
             padding: 20px 24px;
             max-width: 480px;
             width: 100%;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             text-align: center;
         }
 
@@ -615,17 +783,18 @@
             height: 12px;
         }
 
-        .signal-bars span { background: #fff; border-radius: 1px; width: 3px; }
+        .signal-bars span { background: rgba(255,255,255,0.4); border-radius: 1px; width: 3px; transition: background 0.4s; }
         .signal-bars span:nth-child(1) { height: 4px;  }
         .signal-bars span:nth-child(2) { height: 6px;  }
         .signal-bars span:nth-child(3) { height: 9px;  }
         .signal-bars span:nth-child(4) { height: 12px; }
+        /* active bars light up */
+        .signal-bars span.active { background: #fff; }
 
         .status-network { color: #fff; font-size: 0.7rem; font-weight: 600; }
 
         .status-battery {
-            width: 20px;
-            height: 10px;
+            width: 20px; height: 10px;
             border: 1.5px solid #fff;
             border-radius: 2px;
             position: relative;
@@ -681,9 +850,64 @@
 
         .home-time { color: #fff; font-size: 2.8rem; font-weight: 300; letter-spacing: -1px; }
         .home-date { color: rgba(255,255,255,0.6); font-size: 0.82rem; }
-        .home-hint { margin-top: 28px; color: rgba(255,255,255,0.4); font-size: 0.75rem; text-align: center; padding: 0 20px; }
+        .home-hint {
+            margin-top: 28px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 0 20px;
+        }
 
-        /* ── USSD dialog ─────────────────────────────────────────── */
+        /* ── SMS notification banner (slides down over home) ─────────── */
+        .sms-notification {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            background: rgba(26,26,26,0.88);
+            backdrop-filter: blur(6px);
+            border-radius: 0 0 12px 12px;
+            padding: 10px 14px;
+            z-index: 20;
+            transform: translateY(-100%);
+            transition: transform 0.35s cubic-bezier(0.34,1.3,0.64,1);
+        }
+
+        .sms-notification.visible { transform: translateY(0); }
+
+        .sms-notif-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .sms-notif-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--mint);
+            flex-shrink: 0;
+        }
+
+        .sms-notif-from {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .sms-notif-time {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.45);
+            margin-left: auto;
+        }
+
+        .sms-notif-body {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.5;
+        }
+
+        /* ── USSD dialog overlay ─────────────────────────────────────── */
         .ussd-backdrop {
             display: none;
             position: absolute;
@@ -707,8 +931,18 @@
         }
 
         @keyframes dialogIn {
-            from { opacity: 0; transform: scale(0.96); }
-            to   { opacity: 1; transform: scale(1);    }
+            from { opacity: 0; transform: scale(0.96) translateY(6px); }
+            to   { opacity: 1; transform: scale(1)    translateY(0);   }
+        }
+
+        /* screen content fade between transitions */
+        .ussd-content.transitioning {
+            animation: screenFade 0.18s ease-out;
+        }
+
+        @keyframes screenFade {
+            from { opacity: 0; transform: translateY(4px); }
+            to   { opacity: 1; transform: translateY(0);   }
         }
 
         /* zone 1 — header */
@@ -738,7 +972,6 @@
             line-height: 1.3;
         }
 
-        /* plain-text menu — monospaced to match real USSD feel */
         .ussd-menu-text {
             font-family: ui-monospace, 'Roboto Mono', 'Courier New', monospace;
             font-size: 0.78rem;
@@ -780,13 +1013,28 @@
             color: var(--text);
             background: var(--white);
             outline: none;
-            transition: border-color 0.15s;
+            transition: border-color 0.15s, box-shadow 0.15s;
             caret-color: var(--coral);
         }
 
-        .ussd-input:focus { border-color: var(--coral); box-shadow: 0 0 0 2px rgba(224,120,86,0.12); }
+        .ussd-input:focus {
+            border-color: var(--coral);
+            box-shadow: 0 0 0 2px rgba(224,120,86,0.14);
+        }
 
-        /* session timer */
+        /* flash the input border on invalid entry */
+        .ussd-input.shake {
+            animation: inputShake 0.35s ease-out;
+            border-color: #D32F2F;
+        }
+
+        @keyframes inputShake {
+            0%, 100% { transform: translateX(0); }
+            20%       { transform: translateX(-5px); }
+            60%       { transform: translateX(5px); }
+        }
+
+        /* session countdown */
         .session-timer-wrap { padding: 6px 14px 4px; }
 
         .session-timer-label {
@@ -811,7 +1059,17 @@
             transition: width 1s linear, background 0.3s;
         }
 
-        /* zone 4 — actions */
+        /* urgent pulse when under 6 seconds */
+        .session-bar-fill.urgent {
+            animation: timerPulse 0.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes timerPulse {
+            from { opacity: 1; }
+            to   { opacity: 0.55; }
+        }
+
+        /* zone 4 — action buttons */
         .ussd-actions {
             display: flex;
             gap: 8px;
@@ -847,10 +1105,13 @@
             font-weight: 600;
             cursor: pointer;
             min-height: 44px;
-            transition: background 0.15s;
+            transition: background 0.15s, transform 0.1s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .ussd-send:hover { background: var(--coral-dark); }
+        .ussd-send:hover  { background: var(--coral-dark); }
+        .ussd-send:active { transform: scale(0.97); }
 
         /* processing dots */
         .ussd-processing {
@@ -866,8 +1127,7 @@
 
         .dots span {
             display: inline-block;
-            width: 7px;
-            height: 7px;
+            width: 7px; height: 7px;
             border-radius: 50%;
             background: var(--coral);
             margin: 0 3px;
@@ -882,24 +1142,25 @@
             40%            { transform: scale(1.0); opacity: 1;   }
         }
 
-        /* ── responsive ──────────────────────────────────────────── */
+        /* ── responsive ──────────────────────────────────────────────── */
         @media (max-width: 600px) {
-            .top-bar        { padding: 0 14px; height: 54px; }
+            .top-bar         { padding: 0 14px; height: 54px; }
             .top-bar-brand small { display: none; }
-            .balance-chip   { display: none; }
-            .app-body       { padding: 20px 12px 48px; }
-            .web-hero       { padding: 20px; }
+            .balance-chip    { display: none; }
+            .app-body        { padding: 20px 12px 48px; }
+            .web-hero        { padding: 20px; }
             .web-hero-text h1 { font-size: 1.25rem; }
-            .phone-wrap     { width: 100%; max-width: 320px; }
-            .category-tabs  { width: 100%; }
-            .cat-tab        { flex: 1; text-align: center; }
+            .phone-wrap      { width: 100%; max-width: 320px; }
+            .category-tabs   { width: 100%; }
+            .cat-tab         { flex: 1; text-align: center; }
+            .topup-row       { margin-left: 0; }
         }
     </style>
 </head>
 
 <body>
 
-<!-- ── top nav ─────────────────────────────────────────────────── -->
+<!-- ── top nav ──────────────────────────────────────────────────── -->
 <header class="top-bar">
     <div class="top-bar-brand">
         <div class="brand-dot"></div>
@@ -915,7 +1176,7 @@
     </div>
 </header>
 
-<!-- ── WEB MODE ────────────────────────────────────────────────── -->
+<!-- ── WEB MODE ─────────────────────────────────────────────────── -->
 <div id="viewWeb" class="view active">
     <div class="app-body">
 
@@ -933,15 +1194,29 @@
         <div class="account-strip">
             <div class="acct-item">
                 <label>Phone Number</label>
-                <div class="acct-value" id="webPhoneNum">0712 345 678</div>
+                <div class="acct-value">0712 345 678</div>
             </div>
             <div class="acct-item">
                 <label>Airtime Balance</label>
                 <div class="acct-value balance-positive" id="webBalance">Ksh 150.00</div>
             </div>
             <div class="acct-item">
-                <label>Active Bundle</label>
+                <label>Last Bundle</label>
                 <div class="acct-value" id="webActiveBundles">None</div>
+            </div>
+            <!-- top-up control -->
+            <div class="topup-row">
+                <span class="topup-label">Top up:</span>
+                <input
+                    class="topup-input"
+                    id="topupAmount"
+                    type="number"
+                    min="5"
+                    max="9999"
+                    placeholder="Ksh"
+                    aria-label="Top up amount in Ksh"
+                />
+                <button class="topup-btn" onclick="app.topUp()">Add Airtime</button>
             </div>
         </div>
 
@@ -963,20 +1238,20 @@
                 <div class="bundle-sms-count">20 <span>SMS</span></div>
                 <div class="bundle-validity">Valid 24 hours</div>
                 <div class="bundle-price">Ksh 5.00</div>
-                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'20',price:5,validity:'24 hours',type:'Daily'})">Buy Now</button>
+                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'20',price:5,validity:'24 hours',type:'Daily'}, this)">Buy Now</button>
             </div>
             <div class="bundle-card">
                 <div class="bundle-sms-count">200 <span>SMS</span></div>
                 <div class="bundle-validity">Valid 24 hours</div>
                 <div class="bundle-price">Ksh 10.00</div>
-                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'200',price:10,validity:'24 hours',type:'Daily'})">Buy Now</button>
+                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'200',price:10,validity:'24 hours',type:'Daily'}, this)">Buy Now</button>
             </div>
             <div class="bundle-card unlimited">
                 <div class="bundle-sms-count">Unlimited <span>SMS</span></div>
                 <div class="bundle-validity">Valid 24 hours</div>
                 <div class="bundle-price">Ksh 20.00</div>
                 <div class="bundle-fup">FUP: 1,000 SMS/day</div>
-                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'Unlimited',price:20,validity:'24 hours',type:'Daily',fup:true})">Buy Now</button>
+                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'Unlimited',price:20,validity:'24 hours',type:'Daily',fup:true}, this)">Buy Now</button>
             </div>
         </div>
 
@@ -986,20 +1261,20 @@
                 <div class="bundle-sms-count">100 <span>SMS</span></div>
                 <div class="bundle-validity">Valid 7 days &middot; On-Net &amp; Off-Net</div>
                 <div class="bundle-price">Ksh 20.00</div>
-                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'100',price:20,validity:'7 days',type:'Weekly'})">Buy Now</button>
+                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'100',price:20,validity:'7 days',type:'Weekly'}, this)">Buy Now</button>
             </div>
             <div class="bundle-card">
                 <div class="bundle-sms-count">1,000 <span>SMS</span></div>
                 <div class="bundle-validity">Valid 7 days &middot; On-Net &amp; Off-Net</div>
                 <div class="bundle-price">Ksh 30.00</div>
-                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'1000',price:30,validity:'7 days',type:'Weekly'})">Buy Now</button>
+                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'1000',price:30,validity:'7 days',type:'Weekly'}, this)">Buy Now</button>
             </div>
             <div class="bundle-card unlimited">
                 <div class="bundle-sms-count">Unlimited <span>SMS</span></div>
                 <div class="bundle-validity">Valid 7 days &middot; On-Net &amp; Off-Net</div>
                 <div class="bundle-price">Ksh 50.00</div>
                 <div class="bundle-fup">FUP: 1,000 SMS/day &middot; 7,000 SMS/week</div>
-                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'Unlimited',price:50,validity:'7 days',type:'Weekly',fup:true})">Buy Now</button>
+                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'Unlimited',price:50,validity:'7 days',type:'Weekly',fup:true}, this)">Buy Now</button>
             </div>
         </div>
 
@@ -1009,26 +1284,50 @@
                 <div class="bundle-sms-count">1,500 <span>SMS</span></div>
                 <div class="bundle-validity">Valid 30 days &middot; On-Net &amp; Off-Net</div>
                 <div class="bundle-price">Ksh 100.00</div>
-                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'1500',price:100,validity:'30 days',type:'Monthly'})">Buy Now</button>
+                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'1500',price:100,validity:'30 days',type:'Monthly'}, this)">Buy Now</button>
             </div>
             <div class="bundle-card">
                 <div class="bundle-sms-count">3,500 <span>SMS</span></div>
                 <div class="bundle-validity">Valid 30 days &middot; On-Net &amp; Off-Net</div>
                 <div class="bundle-price">Ksh 200.00</div>
-                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'3500',price:200,validity:'30 days',type:'Monthly'})">Buy Now</button>
+                <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'3500',price:200,validity:'30 days',type:'Monthly'}, this)">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- purchase history -->
+        <div class="history-panel" id="historyPanel">
+            <div class="history-panel-title">Purchase History</div>
+            <div id="historyBody">
+                <div class="history-empty" id="historyEmpty">No purchases yet this session.</div>
+                <div class="history-list" id="historyList"></div>
             </div>
         </div>
 
     </div>
 </div><!-- /viewWeb -->
 
-<!-- ── USSD MODE ────────────────────────────────────────────────── -->
+<!-- ── USSD MODE ─────────────────────────────────────────────────── -->
 <div id="viewUssd" class="view">
     <div class="app-body ussd-view">
 
+        <!-- control panel -->
+        <div class="ussd-controls">
+            <div style="font-size:0.8rem; color:var(--text-mid);">
+                <strong style="color:var(--text);">USSD Simulator</strong> &mdash;
+                navigate using numeric replies, just like a real handset.
+            </div>
+            <label class="latency-toggle" title="When on, processing takes 3–4 seconds instead of 1 second">
+                <span class="toggle-switch">
+                    <input type="checkbox" id="latencyToggle" onchange="app.toggleLatency(this.checked)">
+                    <span class="toggle-track"></span>
+                </span>
+                Simulate slow network
+            </label>
+        </div>
+
         <div class="ussd-instructions">
-            <h2>USSD Simulator</h2>
-            <p>This simulates dialing <strong>*188#</strong> on a Safaricom line. Press the dial button to open a session, then navigate using numeric replies — exactly like on a real handset.</p>
+            <h2>Dial *188#</h2>
+            <p>Press the button below to open a USSD session. Type a number and press <strong>Send</strong> or <strong>Enter</strong> to navigate — exactly like on a Safaricom handset.</p>
             <button class="dial-btn" id="dialBtn" onclick="app.dialUssd()">Dial *188#</button>
         </div>
 
@@ -1037,8 +1336,11 @@
             <div class="phone-status-bar">
                 <span class="status-time" id="phoneTime">12:00</span>
                 <div class="status-icons">
-                    <div class="signal-bars">
-                        <span></span><span></span><span></span><span></span>
+                    <div class="signal-bars" id="signalBars">
+                        <span class="active"></span>
+                        <span class="active"></span>
+                        <span class="active"></span>
+                        <span class="active"></span>
                     </div>
                     <span class="status-network">Safaricom</span>
                     <div class="status-battery"><div class="battery-fill"></div></div>
@@ -1047,27 +1349,37 @@
             <div class="phone-notch"></div>
 
             <div class="phone-screen" id="phoneScreen">
-                <!-- home screen -->
+                <!-- home screen wallpaper -->
                 <div class="phone-home" id="phoneHome">
                     <div class="home-time" id="homeTime">12:00</div>
                     <div class="home-date" id="homeDate">Mon, 9 March</div>
-                    <div class="home-hint">Tap "Dial *188#" above to start a USSD session</div>
+                    <div class="home-hint">Tap "Dial *188#" above to start a session</div>
+                </div>
+
+                <!-- SMS notification banner -->
+                <div class="sms-notification" id="smsNotification" aria-live="polite">
+                    <div class="sms-notif-header">
+                        <div class="sms-notif-dot"></div>
+                        <span class="sms-notif-from">Safaricom</span>
+                        <span class="sms-notif-time" id="notifTime">Just now</span>
+                    </div>
+                    <div class="sms-notif-body" id="notifBody"></div>
                 </div>
 
                 <!-- USSD dialog overlay -->
                 <div class="ussd-backdrop" id="ussdBackdrop">
                     <div class="ussd-dialog" id="ussdDialog">
 
-                        <!-- zone 1: header bar -->
+                        <!-- zone 1: header -->
                         <div class="ussd-header">
                             <span class="ussd-network">Safaricom</span>
                             <span class="ussd-code-label">*188#</span>
                         </div>
 
-                        <!-- zone 2: content -->
-                        <div class="ussd-content" id="ussdContent"></div>
+                        <!-- zone 2: content — aria-live so screen readers announce changes -->
+                        <div class="ussd-content" id="ussdContent" aria-live="polite" aria-atomic="true"></div>
 
-                        <!-- zone 3: input (hidden on terminal / processing screens) -->
+                        <!-- zone 3: input -->
                         <div class="ussd-input-zone" id="ussdInputZone">
                             <label class="ussd-input-label" for="ussdInputField">Reply with a number:</label>
                             <input
@@ -1077,11 +1389,11 @@
                                 inputmode="numeric"
                                 pattern="[0-9]*"
                                 autocomplete="off"
-                                aria-label="USSD input field, reply with a number"
+                                aria-label="USSD input field — reply with a number"
                             />
                         </div>
 
-                        <!-- session countdown -->
+                        <!-- session countdown bar -->
                         <div class="session-timer-wrap" id="sessionTimerWrap">
                             <div class="session-timer-label">
                                 <span>Session</span>
@@ -1092,7 +1404,7 @@
                             </div>
                         </div>
 
-                        <!-- zone 4: action buttons -->
+                        <!-- zone 4: actions -->
                         <div class="ussd-actions" id="ussdActionsBar">
                             <button class="ussd-cancel" id="ussdCancelBtn">Cancel</button>
                             <button class="ussd-send"   id="ussdSendBtn">Send</button>
@@ -1106,11 +1418,11 @@
     </div>
 </div><!-- /viewUssd -->
 
-<!-- web purchase modal -->
-<div class="modal-backdrop" id="webModal">
+<!-- web purchase confirm modal -->
+<div class="modal-backdrop" id="webModal" role="dialog" aria-modal="true" aria-labelledby="webModalHeading">
     <div class="modal-box">
         <div class="modal-form-content" id="webModalContent">
-            <div class="modal-title">Confirm Purchase</div>
+            <div class="modal-title" id="webModalHeading">Confirm Purchase</div>
             <div class="modal-bundle-info" id="webModalBundleInfo"></div>
             <div class="modal-fup" id="webModalFup" style="display:none">
                 Fair Usage Policy applies: 1,000 SMS/day and 7,000 SMS/week.
@@ -1143,63 +1455,50 @@
     </div>
 </div>
 
-<!-- toasts -->
-<div class="toast-container" id="toastContainer"></div>
+<!-- toast container -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
 <script>
-// ── bundle catalogue ─────────────────────────────────────────────
+// ── bundle catalogue ──────────────────────────────────────────────
 // source: safaricom_sms_addendum.md §2
 const BUNDLES = {
     daily: [
-        { sms: '20',        price: 5,   validity: '24 hours', type: 'Daily'   },
-        { sms: '200',       price: 10,  validity: '24 hours', type: 'Daily'   },
-        { sms: 'Unlimited', price: 20,  validity: '24 hours', type: 'Daily',  fup: true }
+        { sms: '20',        price: 5,   validity: '24 hours', type: 'Daily'            },
+        { sms: '200',       price: 10,  validity: '24 hours', type: 'Daily'            },
+        { sms: 'Unlimited', price: 20,  validity: '24 hours', type: 'Daily',  fup: true}
     ],
     weekly: [
-        { sms: '100',       price: 20,  validity: '7 days',  type: 'Weekly'  },
-        { sms: '1000',      price: 30,  validity: '7 days',  type: 'Weekly'  },
+        { sms: '100',       price: 20,  validity: '7 days',  type: 'Weekly'            },
+        { sms: '1000',      price: 30,  validity: '7 days',  type: 'Weekly'            },
         { sms: 'Unlimited', price: 50,  validity: '7 days',  type: 'Weekly', fup: true }
     ],
     monthly: [
-        { sms: '1500',      price: 100, validity: '30 days', type: 'Monthly' },
-        { sms: '3500',      price: 200, validity: '30 days', type: 'Monthly' }
+        { sms: '1500',      price: 100, validity: '30 days', type: 'Monthly'           },
+        { sms: '3500',      price: 200, validity: '30 days', type: 'Monthly'           }
     ]
 };
 
-// ── simulated account ────────────────────────────────────────────
+// ── account state ────────────────────────────────────────────────
 const account = {
-    balance:       150.00,
-    phoneNumber:  '0712345678',
-    activeBundles: []
+    balance:        150.00,
+    phoneNumber:   '0712345678',
+    activeBundles:  [],
+    purchaseHistory: []
 };
 
-// ── USSD menu tree ───────────────────────────────────────────────
-// each node describes one USSD screen
-// types:
-//   menu        — numbered list, expects numeric reply
-//   phone_entry — expects a phone number string
-//   balance     — dynamic terminal: shows current balance
-//   confirm     — purchase confirmation (built dynamically)
-//   payment     — payment method selection (built dynamically)
-//   processing  — animated wait screen
-//   success     — terminal success message
-//   error       — error with retry/back options
-//   timeout     — session expired terminal
-//   unsubscribe — unsubscribe confirmation
+// ── USSD menu tree ────────────────────────────────────────────────
 const TREE = {
     root: {
-        type: 'menu',
-        title: 'Welcome to Bundles',
+        type: 'menu', title: 'Welcome to Bundles',
         items: [
-            { key: '1', text: 'Buy SMS Bundles',        next: 'sms_cat'   },
-            { key: '2', text: 'Check Balance',          next: 'balance'   },
-            { key: '3', text: 'Buy for Another Number', next: 'gift_entry'},
-            { key: '4', text: 'Unsubscribe',            next: 'unsub_q'   }
+            { key: '1', text: 'Buy SMS Bundles',        next: 'sms_cat'    },
+            { key: '2', text: 'Check Balance',          next: 'balance'    },
+            { key: '3', text: 'Buy for Another Number', next: 'gift_entry' },
+            { key: '4', text: 'Unsubscribe',            next: 'unsub_q'    }
         ]
     },
     sms_cat: {
-        type: 'menu',
-        title: 'SMS Bundles',
+        type: 'menu', title: 'SMS Bundles',
         items: [
             { key: '1', text: 'Daily SMS',   next: 'sms_daily'   },
             { key: '2', text: 'Weekly SMS',  next: 'sms_weekly'  },
@@ -1208,8 +1507,7 @@ const TREE = {
         ]
     },
     sms_daily: {
-        type: 'menu',
-        title: 'Daily SMS',
+        type: 'menu', title: 'Daily SMS',
         items: [
             { key: '1', text: '20 SMS @ Ksh 5',         action: 'purchase', bundle: BUNDLES.daily[0] },
             { key: '2', text: '200 SMS @ Ksh 10',       action: 'purchase', bundle: BUNDLES.daily[1] },
@@ -1218,8 +1516,7 @@ const TREE = {
         ]
     },
     sms_weekly: {
-        type: 'menu',
-        title: 'Weekly SMS',
+        type: 'menu', title: 'Weekly SMS',
         items: [
             { key: '1', text: '100 SMS @ Ksh 20',       action: 'purchase', bundle: BUNDLES.weekly[0] },
             { key: '2', text: '1000 SMS @ Ksh 30',      action: 'purchase', bundle: BUNDLES.weekly[1] },
@@ -1228,27 +1525,20 @@ const TREE = {
         ]
     },
     sms_monthly: {
-        type: 'menu',
-        title: 'Monthly SMS',
+        type: 'menu', title: 'Monthly SMS',
         items: [
             { key: '1', text: '1500 SMS @ Ksh 100', action: 'purchase', bundle: BUNDLES.monthly[0] },
             { key: '2', text: '3500 SMS @ Ksh 200', action: 'purchase', bundle: BUNDLES.monthly[1] },
             { key: '3', text: 'Back',               next: 'sms_cat' }
         ]
     },
-    balance: {
-        type: 'balance'
-        // rendered dynamically — terminal
-    },
+    balance: { type: 'balance' },
     gift_entry: {
-        type: 'phone_entry',
-        title: 'Buy for Another Number',
-        prompt: 'Enter recipient number\n(e.g. 0712345678):',
-        nextNode: 'gift_cat'
+        type: 'phone_entry', title: 'Buy for Another Number',
+        prompt: 'Enter recipient number\n(e.g. 0712345678):', nextNode: 'gift_cat'
     },
     gift_cat: {
-        type: 'menu',
-        title: 'Select Bundle Type',
+        type: 'menu', title: 'Select Bundle Type',
         items: [
             { key: '1', text: 'Daily SMS',   next: 'gift_daily'   },
             { key: '2', text: 'Weekly SMS',  next: 'gift_weekly'  },
@@ -1257,8 +1547,7 @@ const TREE = {
         ]
     },
     gift_daily: {
-        type: 'menu',
-        title: 'Daily SMS (Gift)',
+        type: 'menu', title: 'Daily SMS (Gift)',
         items: [
             { key: '1', text: '20 SMS @ Ksh 5',         action: 'purchase_gift', bundle: BUNDLES.daily[0] },
             { key: '2', text: '200 SMS @ Ksh 10',       action: 'purchase_gift', bundle: BUNDLES.daily[1] },
@@ -1267,8 +1556,7 @@ const TREE = {
         ]
     },
     gift_weekly: {
-        type: 'menu',
-        title: 'Weekly SMS (Gift)',
+        type: 'menu', title: 'Weekly SMS (Gift)',
         items: [
             { key: '1', text: '100 SMS @ Ksh 20',       action: 'purchase_gift', bundle: BUNDLES.weekly[0] },
             { key: '2', text: '1000 SMS @ Ksh 30',      action: 'purchase_gift', bundle: BUNDLES.weekly[1] },
@@ -1277,8 +1565,7 @@ const TREE = {
         ]
     },
     gift_monthly: {
-        type: 'menu',
-        title: 'Monthly SMS (Gift)',
+        type: 'menu', title: 'Monthly SMS (Gift)',
         items: [
             { key: '1', text: '1500 SMS @ Ksh 100', action: 'purchase_gift', bundle: BUNDLES.monthly[0] },
             { key: '2', text: '3500 SMS @ Ksh 200', action: 'purchase_gift', bundle: BUNDLES.monthly[1] },
@@ -1286,32 +1573,31 @@ const TREE = {
         ]
     },
     unsub_q: {
-        type: 'menu',
-        title: 'Unsubscribe',
+        type: 'menu', title: 'Unsubscribe',
         body: 'You will be unsubscribed\nfrom all active SMS bundles.',
         items: [
             { key: '1', text: 'Confirm', action: 'unsubscribe' },
-            { key: '2', text: 'Cancel',  next: 'root'          }
+            { key: '2', text: 'Cancel',  next: 'root' }
         ]
     }
 };
 
-// ── USSD session state ────────────────────────────────────────────
+// ── session state ─────────────────────────────────────────────────
 const session = {
-    active:       false,
-    nodeId:       'root',
-    history:      [],       // stack of node IDs for back-navigation
-    timerSecs:    20,
-    timerHandle:  null,
-    recipientNum: null,
-    pendingBundle: null,    // set when user selects a bundle, before confirm
-    state: 'menu'           // menu | phone_entry | confirm | payment | processing | terminal
+    active:        false,
+    nodeId:        'root',
+    history:       [],
+    timerSecs:     20,
+    timerHandle:   null,
+    recipientNum:  null,
+    pendingBundle: null,
+    state:         'menu',    // menu | phone_entry | confirm | payment | processing | terminal | error
+    slowNetwork:   false      // toggled by the latency switch
 };
 
 // ── USSD renderer ─────────────────────────────────────────────────
 const ussdUI = {
 
-    // convenience getters
     get content()    { return document.getElementById('ussdContent');    },
     get inputZone()  { return document.getElementById('ussdInputZone'); },
     get inputField() { return document.getElementById('ussdInputField'); },
@@ -1320,166 +1606,168 @@ const ussdUI = {
     get barFill()    { return document.getElementById('sessionBarFill');  },
     get countdown()  { return document.getElementById('sessionCountdown'); },
 
-    // show standard input + cancel/send
-    showInput(label) {
-        this.inputZone.style.display  = 'block';
-        this.timerWrap.style.display  = 'block';
-        this.inputField.value         = '';
-        this.inputField.inputMode     = 'numeric';
+    // animate the content area when screens change
+    _transition(renderFn) {
+        const el = this.content;
+        el.classList.remove('transitioning');
+        // force reflow so the animation re-fires
+        void el.offsetWidth;
+        renderFn();
+        el.classList.add('transitioning');
+    },
+
+    showInput(label, mode) {
+        this.inputZone.style.display = 'block';
+        this.timerWrap.style.display = 'block';
+        this.inputField.value        = '';
+        this.inputField.inputMode    = mode || 'numeric';
         document.querySelector('.ussd-input-label').textContent = label || 'Reply with a number:';
-
-        this.actionsBar.innerHTML = `
-            <button class="ussd-cancel" id="ussdCancelBtn">Cancel</button>
-            <button class="ussd-send"   id="ussdSendBtn">Send</button>
-        `;
-        document.getElementById('ussdCancelBtn').onclick = () => app.ussdCancel();
-        document.getElementById('ussdSendBtn').onclick   = () => app.ussdSend();
+        this._buildActionButtons();
         this.focusInput();
     },
 
-    // phone number entry has slightly different inputmode
-    showPhoneInput(prompt) {
-        this.inputZone.style.display  = 'block';
-        this.timerWrap.style.display  = 'block';
-        this.inputField.value         = '';
-        this.inputField.inputMode     = 'tel';
-        document.querySelector('.ussd-input-label').textContent = prompt || 'Enter phone number:';
-
-        this.actionsBar.innerHTML = `
-            <button class="ussd-cancel" id="ussdCancelBtn">Cancel</button>
-            <button class="ussd-send"   id="ussdSendBtn">Send</button>
-        `;
-        document.getElementById('ussdCancelBtn').onclick = () => app.ussdCancel();
-        document.getElementById('ussdSendBtn').onclick   = () => app.ussdSend();
-        this.focusInput();
-    },
-
-    // terminal screen: no input box, one Close button
     showTerminal() {
         this.inputZone.style.display  = 'none';
         this.timerWrap.style.display  = 'none';
-        this.actionsBar.innerHTML = `
-            <button class="ussd-cancel" id="ussdCancelBtn" style="flex:1">Close</button>
-        `;
+        this.actionsBar.innerHTML = `<button class="ussd-cancel" id="ussdCancelBtn" style="flex:1">Close</button>`;
         document.getElementById('ussdCancelBtn').onclick = () => app.ussdClose();
+    },
+
+    _buildActionButtons() {
+        this.actionsBar.innerHTML = `
+            <button class="ussd-cancel" id="ussdCancelBtn">Cancel</button>
+            <button class="ussd-send"   id="ussdSendBtn">Send</button>
+        `;
+        document.getElementById('ussdCancelBtn').onclick = () => app.ussdCancel();
+        document.getElementById('ussdSendBtn').onclick   = () => app.ussdSend();
     },
 
     focusInput() {
         setTimeout(() => this.inputField && this.inputField.focus(), 60);
     },
 
-    // render a standard menu node
-    renderMenu(node) {
-        let menuLines = '';
-        if (node.body) menuLines += node.body + '\n\n';
-        node.items.forEach(item => { menuLines += item.key + '. ' + item.text + '\n'; });
+    // shake the input to signal invalid entry
+    shakeInput() {
+        const el = this.inputField;
+        el.classList.remove('shake');
+        void el.offsetWidth;
+        el.classList.add('shake');
+        setTimeout(() => el.classList.remove('shake'), 400);
+    },
 
-        this.content.innerHTML = `
-            <div class="ussd-content-title">${node.title}</div>
-            <pre class="ussd-menu-text">${menuLines.trimEnd()}</pre>
-        `;
+    renderMenu(node) {
+        let lines = '';
+        if (node.body) lines += node.body + '\n\n';
+        node.items.forEach(i => { lines += i.key + '. ' + i.text + '\n'; });
+        this._transition(() => {
+            this.content.innerHTML = `
+                <div class="ussd-content-title">${node.title}</div>
+                <pre class="ussd-menu-text">${lines.trimEnd()}</pre>
+            `;
+        });
         this.showInput('Reply with a number:');
     },
 
-    // render balance screen (terminal)
     renderBalance() {
-        const bundleList = account.activeBundles.length
+        const list = account.activeBundles.length
             ? account.activeBundles.join('\n  ')
             : 'None';
-        this.content.innerHTML = `
-            <div class="ussd-content-title">Account Balance</div>
-            <pre class="ussd-body-text">Airtime: Ksh ${account.balance.toFixed(2)}\n\nActive Bundles:\n  ${bundleList}</pre>
-        `;
+        this._transition(() => {
+            this.content.innerHTML = `
+                <div class="ussd-content-title">Account Balance</div>
+                <pre class="ussd-body-text">Airtime: Ksh ${account.balance.toFixed(2)}\n\nActive Bundles:\n  ${list}</pre>
+            `;
+        });
         this.showTerminal();
     },
 
-    // phone number entry
     renderPhoneEntry(node) {
-        this.content.innerHTML = `
-            <div class="ussd-content-title">${node.title}</div>
-            <pre class="ussd-body-text">${node.prompt}</pre>
-        `;
-        this.showPhoneInput('Enter number (e.g. 0712345678):');
+        this._transition(() => {
+            this.content.innerHTML = `
+                <div class="ussd-content-title">${node.title}</div>
+                <pre class="ussd-body-text">${node.prompt}</pre>
+            `;
+        });
+        this.showInput('Enter number (e.g. 0712345678):', 'tel');
     },
 
-    // purchase confirmation screen
     renderConfirm(bundle, isGift) {
         const smsLabel = bundle.sms === 'Unlimited' ? 'Unlimited SMS' : bundle.sms + ' SMS';
         const fupLine  = bundle.fup ? '\nFUP: 1,000 SMS/day' : '';
         const recLine  = isGift && session.recipientNum ? '\nRecipient: ' + session.recipientNum : '';
-
-        this.content.innerHTML = `
-            <div class="ussd-content-title">Confirm Purchase</div>
-            <pre class="ussd-menu-text">${smsLabel} @ Ksh ${bundle.price}${fupLine}${recLine}
-
-1. Confirm
-2. Cancel</pre>
-        `;
+        this._transition(() => {
+            this.content.innerHTML = `
+                <div class="ussd-content-title">Confirm Purchase</div>
+                <pre class="ussd-menu-text">${smsLabel} @ Ksh ${bundle.price}${fupLine}${recLine}\n\n1. Confirm\n2. Cancel</pre>
+            `;
+        });
         this.showInput('Reply with a number:');
     },
 
-    // payment method selection
     renderPayment() {
-        this.content.innerHTML = `
-            <div class="ussd-content-title">Payment Method</div>
-            <pre class="ussd-menu-text">1. Airtime
-2. M-PESA</pre>
-        `;
+        this._transition(() => {
+            this.content.innerHTML = `
+                <div class="ussd-content-title">Payment Method</div>
+                <pre class="ussd-menu-text">1. Airtime\n2. M-PESA</pre>
+            `;
+        });
         this.showInput('Reply with a number:');
     },
 
-    // animated processing screen
     renderProcessing() {
         this.inputZone.style.display  = 'none';
         this.timerWrap.style.display  = 'none';
         this.actionsBar.innerHTML     = '';
-
-        this.content.innerHTML = `
-            <div class="ussd-processing">
-                <p>Processing request</p>
-                <p>Please wait...</p>
-                <div class="dots" style="margin-top:14px">
-                    <span></span><span></span><span></span>
+        this._transition(() => {
+            this.content.innerHTML = `
+                <div class="ussd-processing">
+                    <p>Processing request</p>
+                    <p>Please wait...</p>
+                    <div class="dots" style="margin-top:14px">
+                        <span></span><span></span><span></span>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        });
     },
 
-    // success terminal
-    renderSuccess(message) {
-        this.content.innerHTML = `<pre class="ussd-body-text">${message}</pre>`;
+    renderSuccess(msg) {
+        this._transition(() => {
+            this.content.innerHTML = `<pre class="ussd-body-text">${msg}</pre>`;
+        });
         this.showTerminal();
     },
 
-    // error with retry / main menu options
-    renderError(message) {
-        this.content.innerHTML = `
-            <div class="ussd-content-title">Error</div>
-            <pre class="ussd-menu-text">${message}
-
-1. Retry
-2. Main Menu</pre>
-        `;
+    renderError(msg) {
+        this.shakeInput();
+        this._transition(() => {
+            this.content.innerHTML = `
+                <div class="ussd-content-title">Error</div>
+                <pre class="ussd-menu-text">${msg}\n\n1. Retry\n2. Main Menu</pre>
+            `;
+        });
         this.showInput('Reply with a number:');
         session.state = 'error';
     },
 
-    // session expired terminal
     renderTimeout() {
-        this.content.innerHTML = `<pre class="ussd-body-text">Session expired.\nPlease dial again.</pre>`;
+        this._transition(() => {
+            this.content.innerHTML = `<pre class="ussd-body-text">Session expired.\nPlease dial again.</pre>`;
+        });
         this.showTerminal();
     },
 
-    // update the countdown bar
     updateTimer(secs) {
         const pct = (secs / 20) * 100;
-        this.barFill.style.width      = pct + '%';
-        this.barFill.style.background = secs <= 6 ? '#D32F2F' : 'var(--coral)';
-        this.countdown.textContent    = secs + 's';
+        const fill = this.barFill;
+        fill.style.width      = pct + '%';
+        fill.style.background = secs <= 6 ? '#D32F2F' : 'var(--coral)';
+        fill.classList.toggle('urgent', secs <= 5);
+        this.countdown.textContent = secs + 's';
     }
 };
 
-// ── session timer helpers ─────────────────────────────────────────
+// ── session timer ──────────────────────────────────────────────────
 const timer = {
     start() {
         session.timerSecs = 20;
@@ -1500,15 +1788,77 @@ const timer = {
     }
 };
 
-// ── main app object ───────────────────────────────────────────────
+// ── signal bar animation ──────────────────────────────────────────
+// cycles bars to simulate varying signal strength — purely cosmetic
+let _sigCycle = 0;
+function animateSignal() {
+    const bars = document.querySelectorAll('#signalBars span');
+    if (!bars.length) return;
+    // vary between 2 and 4 active bars
+    const active = [2, 3, 4, 4, 4, 3][_sigCycle % 6];
+    bars.forEach((b, i) => b.classList.toggle('active', i < active));
+    _sigCycle++;
+}
+setInterval(animateSignal, 3000);
+
+// ── SMS notification helper ───────────────────────────────────────
+function showSmsNotification(message) {
+    const now = new Date();
+    const hh  = String(now.getHours()).padStart(2,'0');
+    const mm  = String(now.getMinutes()).padStart(2,'0');
+
+    document.getElementById('notifTime').textContent = hh + ':' + mm;
+    document.getElementById('notifBody').textContent = message;
+
+    const el = document.getElementById('smsNotification');
+    el.classList.add('visible');
+    setTimeout(() => el.classList.remove('visible'), 5000);
+}
+
+// ── purchase history helpers ──────────────────────────────────────
+function addHistoryEntry(bundle, payMethod, recipient) {
+    const smsLabel = bundle.sms === 'Unlimited' ? 'Unlimited SMS' : bundle.sms + ' SMS';
+    const label    = bundle.type + ' ' + smsLabel;
+    const now      = new Date();
+    const hh       = String(now.getHours()).padStart(2,'0');
+    const mm       = String(now.getMinutes()).padStart(2,'0');
+
+    account.purchaseHistory.unshift({ label, price: bundle.price, pay: payMethod, time: hh + ':' + mm, recipient: recipient || null });
+
+    const list  = document.getElementById('historyList');
+    const empty = document.getElementById('historyEmpty');
+    if (empty) empty.style.display = 'none';
+
+    const item = document.createElement('div');
+    item.className = 'history-item';
+    const recipientLine = recipient ? ` &rarr; ${recipient}` : '';
+    item.innerHTML = `
+        <div>
+            <div class="history-bundle">${label}${recipientLine}</div>
+            <div class="history-meta">${hh}:${mm} &middot; via ${payMethod}</div>
+        </div>
+        <div class="history-price">Ksh ${bundle.price.toFixed(2)}</div>
+    `;
+    list.prepend(item);
+}
+
+// ── main app ──────────────────────────────────────────────────────
 const app = {
+
+    _pendingWebBundle: null,
+    _selectedPayment:  'airtime',
 
     // ── mode toggle ──────────────────────────────────────────────
     setMode(mode) {
-        document.getElementById('viewWeb').classList.toggle('active',  mode === 'web');
-        document.getElementById('viewUssd').classList.toggle('active', mode === 'ussd');
+        document.getElementById('viewWeb').classList.toggle('active',   mode === 'web');
+        document.getElementById('viewUssd').classList.toggle('active',  mode === 'ussd');
         document.getElementById('btnWebMode').classList.toggle('active',  mode === 'web');
         document.getElementById('btnUssdMode').classList.toggle('active', mode === 'ussd');
+    },
+
+    // ── latency toggle ───────────────────────────────────────────
+    toggleLatency(on) {
+        session.slowNetwork = on;
     },
 
     // ── web tab switch ───────────────────────────────────────────
@@ -1520,10 +1870,36 @@ const app = {
         document.getElementById('tab-' + tab).classList.add('active');
     },
 
-    // ── web purchase flow ────────────────────────────────────────
-    initiateWebPurchase(bundle) {
-        this._pendingWebBundle  = bundle;
-        this._selectedPayment   = 'airtime';
+    // ── top-up ───────────────────────────────────────────────────
+    topUp() {
+        const input = document.getElementById('topupAmount');
+        const val   = parseFloat(input.value);
+        if (!val || val < 5 || val > 9999) {
+            this.showToast('Invalid Amount', 'Please enter an amount between Ksh 5 and Ksh 9,999.', 'warning');
+            input.focus();
+            return;
+        }
+        account.balance += val;
+        input.value = '';
+        this.syncBalanceUI();
+        this.showToast('Airtime Added', `Ksh ${val.toFixed(2)} added. New balance: Ksh ${account.balance.toFixed(2)}.`);
+    },
+
+    // ── web purchase ─────────────────────────────────────────────
+    initiateWebPurchase(bundle, btnEl) {
+        // ripple effect on the button
+        if (btnEl) {
+            const r   = document.createElement('span');
+            r.className = 'ripple';
+            const rect = btnEl.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            r.style.cssText = `width:${size}px;height:${size}px;left:${rect.width/2 - size/2}px;top:${rect.height/2 - size/2}px`;
+            btnEl.appendChild(r);
+            setTimeout(() => r.remove(), 600);
+        }
+
+        this._pendingWebBundle = bundle;
+        this._selectedPayment  = 'airtime';
         document.getElementById('payAirtime').checked = true;
         document.getElementById('payMpesa').checked   = false;
 
@@ -1534,7 +1910,6 @@ const app = {
             <p><strong>Validity:</strong> ${bundle.validity}</p>
             <p><strong>Your Balance:</strong> Ksh ${account.balance.toFixed(2)}</p>
         `;
-
         document.getElementById('webModalFup').style.display = bundle.fup ? 'block' : 'none';
         document.getElementById('webModalContent').style.display = 'block';
         document.getElementById('webModalProcessing').classList.remove('active');
@@ -1558,7 +1933,7 @@ const app = {
         if (account.balance < bundle.price) {
             this.closeWebModal();
             this.showToast('Insufficient Balance',
-                `Your balance (Ksh ${account.balance.toFixed(2)}) is too low.\nRequired: Ksh ${bundle.price.toFixed(2)}.`,
+                `Your balance (Ksh ${account.balance.toFixed(2)}) is too low.\nRequired: Ksh ${bundle.price.toFixed(2)}.\nUse the "Add Airtime" field to top up.`,
                 'error');
             return;
         }
@@ -1567,29 +1942,32 @@ const app = {
         document.getElementById('webModalProcessing').classList.add('active');
 
         setTimeout(() => {
+            const smsLabel  = bundle.sms === 'Unlimited' ? 'Unlimited SMS' : bundle.sms + ' SMS';
+            const payMethod = this._selectedPayment === 'mpesa' ? 'M-PESA' : 'Airtime';
+
             account.balance -= bundle.price;
-            const smsLabel = bundle.sms === 'Unlimited' ? 'Unlimited SMS' : bundle.sms + ' SMS';
             account.activeBundles.push(bundle.type + ' ' + smsLabel);
+            addHistoryEntry(bundle, payMethod, null);
             this.syncBalanceUI();
             this.closeWebModal();
 
-            const payLabel = this._selectedPayment === 'mpesa' ? 'M-PESA' : 'Airtime';
             this.showToast(
                 'Purchase Successful',
-                `You have successfully purchased ${smsLabel}.\nKsh ${bundle.price.toFixed(2)} deducted via ${payLabel}.\nValid for ${bundle.validity}.`
+                `You have successfully purchased ${smsLabel}.\nKsh ${bundle.price.toFixed(2)} deducted via ${payMethod}.\nValid for ${bundle.validity}.`
             );
-        }, 2500);
+        }, 2000);
     },
 
     // ── USSD dial ────────────────────────────────────────────────
     dialUssd() {
-        // reset session
         session.active        = true;
         session.nodeId        = 'root';
         session.history       = [];
         session.recipientNum  = null;
         session.pendingBundle = null;
         session.state         = 'menu';
+        this._afterErrorRetry = null;
+        this._afterErrorNode  = null;
 
         document.getElementById('ussdBackdrop').classList.add('open');
         const btn = document.getElementById('dialBtn');
@@ -1600,15 +1978,10 @@ const app = {
         timer.start();
     },
 
-    // ── navigate to a node ───────────────────────────────────────
     _goToNode(nodeId) {
         session.nodeId = nodeId;
         const node = TREE[nodeId];
-
-        if (!node) {
-            ussdUI.renderError('Internal error.\nUnknown screen.');
-            return;
-        }
+        if (!node) { ussdUI.renderError('Internal error.\nUnknown screen.'); return; }
 
         switch (node.type) {
             case 'menu':
@@ -1617,95 +1990,60 @@ const app = {
                 break;
             case 'balance':
                 session.state = 'terminal';
-                ussdUI.renderBalance();
                 timer.stop();
+                ussdUI.renderBalance();
                 break;
             case 'phone_entry':
                 session.state = 'phone_entry';
                 ussdUI.renderPhoneEntry(node);
                 break;
-            default:
-                ussdUI.renderError('Invalid screen type.');
         }
     },
 
-    // ── main Send handler ────────────────────────────────────────
+    // ── main Send ────────────────────────────────────────────────
     ussdSend() {
         const raw = ussdUI.inputField.value.trim();
         ussdUI.inputField.value = '';
         timer.reset();
 
         switch (session.state) {
-
-            case 'menu':
-                this._handleMenuInput(raw);
-                break;
-
-            case 'phone_entry':
-                this._handlePhoneInput(raw);
-                break;
-
-            case 'confirm':
-                this._handleConfirmInput(raw);
-                break;
-
-            case 'payment':
-                this._handlePaymentInput(raw);
-                break;
-
-            case 'error':
-                this._handleErrorInput(raw);
-                break;
-
-            // ignore input on terminal/processing states
-            default:
-                break;
+            case 'menu':        this._handleMenuInput(raw);    break;
+            case 'phone_entry': this._handlePhoneInput(raw);   break;
+            case 'confirm':     this._handleConfirmInput(raw); break;
+            case 'payment':     this._handlePaymentInput(raw); break;
+            case 'error':       this._handleErrorInput(raw);   break;
+            default: break;
         }
     },
 
-    // ── menu input ───────────────────────────────────────────────
     _handleMenuInput(raw) {
         if (!/^\d+$/.test(raw)) {
             ussdUI.renderError('Invalid input.\nPlease enter a number.');
             return;
         }
-
         const node = TREE[session.nodeId];
         const item = node.items.find(i => i.key === raw);
-
         if (!item) {
-            ussdUI.renderError(`Invalid choice: ${raw}\nPlease choose 1–${node.items.length}.`);
+            ussdUI.renderError(`Invalid choice: ${raw}\nPlease choose 1\u2013${node.items.length}.`);
             return;
         }
-
-        // handle purchase actions
         if (item.action === 'purchase' || item.action === 'purchase_gift') {
             session.pendingBundle = item.bundle;
             session.history.push(session.nodeId);
-            const isGift = item.action === 'purchase_gift';
             session.state = 'confirm';
-            ussdUI.renderConfirm(item.bundle, isGift);
+            ussdUI.renderConfirm(item.bundle, item.action === 'purchase_gift');
             return;
         }
-
-        if (item.action === 'unsubscribe') {
-            this._doUnsubscribe();
-            return;
-        }
-
-        // normal navigation
+        if (item.action === 'unsubscribe') { this._doUnsubscribe(); return; }
         if (item.next) {
             session.history.push(session.nodeId);
             this._goToNode(item.next);
         }
     },
 
-    // ── phone number input ───────────────────────────────────────
     _handlePhoneInput(raw) {
-        // accept 07xxxxxxxx or 01xxxxxxxx — 10 digits starting with 07 or 01
         if (!/^0[17]\d{8}$/.test(raw)) {
             ussdUI.renderError('Invalid number.\nEnter a valid Safaricom\nnumber (07xxxxxxxx).');
-            session.state = 'error';
             return;
         }
         session.recipientNum = raw;
@@ -1714,37 +2052,31 @@ const app = {
         this._goToNode(node.nextNode);
     },
 
-    // ── confirm screen input ─────────────────────────────────────
     _handleConfirmInput(raw) {
         if (raw === '1') {
-            // user confirmed — go to payment
             session.state = 'payment';
             ussdUI.renderPayment();
         } else if (raw === '2') {
-            // user cancelled — go back
             const prev = session.history.pop() || 'root';
             session.state = 'menu';
             this._goToNode(prev);
         } else {
-            ussdUI.renderError('Invalid choice.\n\n1. Confirm\n2. Cancel');
-            session.state = 'confirm';
-            // re-render confirm after the error is dismissed
+            // stay in confirm state after error
             this._afterErrorNode = () => {
                 session.state = 'confirm';
                 ussdUI.renderConfirm(session.pendingBundle, !!session.recipientNum);
             };
+            ussdUI.renderError('Invalid choice.\n\n1. Confirm\n2. Cancel');
         }
     },
 
-    // ── payment screen input ─────────────────────────────────────
     _handlePaymentInput(raw) {
         if (raw !== '1' && raw !== '2') {
-            ussdUI.renderError('Invalid choice.\n\n1. Airtime\n2. M-PESA');
-            session.state = 'error';
             this._afterErrorRetry = () => {
                 session.state = 'payment';
                 ussdUI.renderPayment();
             };
+            ussdUI.renderError('Invalid choice.\n\n1. Airtime\n2. M-PESA');
             return;
         }
 
@@ -1753,56 +2085,56 @@ const app = {
         const isGift    = !!session.recipientNum;
 
         if (account.balance < bundle.price) {
-            const smsLabel = bundle.sms === 'Unlimited' ? 'Unlimited SMS' : bundle.sms + ' SMS';
             timer.stop();
+            session.state = 'terminal';
             ussdUI.renderSuccess(
                 `Insufficient balance.\nBalance: Ksh ${account.balance.toFixed(2)}\nRequired: Ksh ${bundle.price}\n\nPlease top up and\ndial *188# again.`
             );
             return;
         }
 
-        // show processing then success
         session.state = 'processing';
         timer.stop();
         ussdUI.renderProcessing();
 
+        // slow-network toggle affects the processing delay
+        const delay = session.slowNetwork ? 3500 : 1800;
+
         setTimeout(() => {
-            account.balance -= bundle.price;
             const smsLabel = bundle.sms === 'Unlimited' ? 'Unlimited SMS' : bundle.sms + ' SMS';
+            account.balance -= bundle.price;
             account.activeBundles.push(bundle.type + ' ' + smsLabel);
+            addHistoryEntry(bundle, payMethod, isGift ? session.recipientNum : null);
             this.syncBalanceUI();
 
-            let msg;
+            let successMsg, smsNotifMsg;
             if (isGift) {
-                msg = `You have successfully\npurchased ${smsLabel}\nfor ${session.recipientNum}.\n\nKsh ${bundle.price} deducted\nvia ${payMethod}.\nValid for ${bundle.validity}.\n\nThank you.`;
+                successMsg  = `You have successfully\npurchased ${smsLabel}\nfor ${session.recipientNum}.\n\nKsh ${bundle.price} deducted\nvia ${payMethod}.\nValid for ${bundle.validity}.\n\nThank you.`;
+                smsNotifMsg = `You have successfully purchased ${smsLabel} for ${session.recipientNum}. Ksh ${bundle.price} deducted via ${payMethod}.`;
             } else {
-                msg = `You have successfully\npurchased ${smsLabel}.\n\nKsh ${bundle.price} deducted\nvia ${payMethod}.\nValid for ${bundle.validity}.\n\nThank you.`;
+                successMsg  = `You have successfully\npurchased ${smsLabel}.\n\nKsh ${bundle.price} deducted\nvia ${payMethod}.\nValid for ${bundle.validity}.\n\nThank you.`;
+                smsNotifMsg = `You have successfully purchased ${smsLabel}. Ksh ${bundle.price} deducted via ${payMethod}. Bundle valid for ${bundle.validity}.`;
             }
 
             session.state = 'terminal';
-            ussdUI.renderSuccess(msg);
-        }, 2500);
+            ussdUI.renderSuccess(successMsg);
+
+            // after dialog closes the SMS notification slides in
+            setTimeout(() => showSmsNotification(smsNotifMsg), 800);
+        }, delay);
     },
 
-    // ── error screen input ───────────────────────────────────────
     _handleErrorInput(raw) {
         if (raw === '1') {
-            // retry — go back to wherever we were
-            if (typeof this._afterErrorRetry === 'function') {
-                const fn = this._afterErrorRetry;
-                this._afterErrorRetry = null;
-                fn();
-            } else if (typeof this._afterErrorNode === 'function') {
-                const fn = this._afterErrorNode;
-                this._afterErrorNode = null;
-                fn();
-            } else {
-                // default: re-render current node
+            const fn = this._afterErrorRetry || this._afterErrorNode;
+            this._afterErrorRetry = null;
+            this._afterErrorNode  = null;
+            if (fn) { fn(); }
+            else {
                 session.state = 'menu';
                 ussdUI.renderMenu(TREE[session.nodeId]);
             }
         } else if (raw === '2') {
-            // main menu
             this._afterErrorRetry = null;
             this._afterErrorNode  = null;
             session.history = [];
@@ -1812,41 +2144,36 @@ const app = {
         }
     },
 
-    // ── unsubscribe ──────────────────────────────────────────────
     _doUnsubscribe() {
         session.state = 'processing';
         timer.stop();
         ussdUI.renderProcessing();
-
+        const delay = session.slowNetwork ? 3000 : 1800;
         setTimeout(() => {
-            const hadBundles = account.activeBundles.length > 0;
+            const had = account.activeBundles.length > 0;
             account.activeBundles = [];
             this.syncBalanceUI();
-
             session.state = 'terminal';
-            const msg = hadBundles
-                ? 'You have been\nsuccessfully unsubscribed\nfrom all SMS bundles.\n\nThank you.'
-                : 'You have no active\nSMS bundles to\nunsubscribe from.';
-            ussdUI.renderSuccess(msg);
-        }, 2000);
+            ussdUI.renderSuccess(
+                had
+                    ? 'You have been\nsuccessfully unsubscribed\nfrom all SMS bundles.\n\nThank you.'
+                    : 'You have no active\nSMS bundles to\nunsubscribe from.'
+            );
+        }, delay);
     },
 
-    // ── session timeout ──────────────────────────────────────────
     ussdTimeout() {
         timer.stop();
         session.state = 'terminal';
         ussdUI.renderTimeout();
     },
 
-    // ── cancel / close session ───────────────────────────────────
-    ussdCancel() {
-        this.ussdClose();
-    },
+    ussdCancel() { this.ussdClose(); },
 
     ussdClose() {
         timer.stop();
-        session.active = false;
-        session.state  = 'menu';
+        session.active        = false;
+        session.state         = 'menu';
         this._afterErrorRetry = null;
         this._afterErrorNode  = null;
         document.getElementById('ussdBackdrop').classList.remove('open');
@@ -1855,47 +2182,59 @@ const app = {
         btn.textContent = 'Dial *188#';
     },
 
-    // ── balance sync ─────────────────────────────────────────────
+    // ── balance UI sync ──────────────────────────────────────────
     syncBalanceUI() {
         const fmt = 'Ksh ' + account.balance.toFixed(2);
-        const top  = document.getElementById('topBarBalance');
-        const web  = document.getElementById('webBalance');
-        const act  = document.getElementById('webActiveBundles');
-        if (top) top.textContent = fmt;
+
+        // top bar chip — flash updated class
+        const chip = document.getElementById('topBarBalance');
+        if (chip) {
+            chip.textContent = fmt;
+            chip.classList.remove('updated');
+            void chip.offsetWidth;
+            chip.classList.add('updated');
+            setTimeout(() => chip.classList.remove('updated'), 1500);
+        }
+
+        const web = document.getElementById('webBalance');
         if (web) web.textContent = fmt;
-        if (act) act.textContent = account.activeBundles.length
-            ? account.activeBundles[account.activeBundles.length - 1]
-            : 'None';
+
+        const act = document.getElementById('webActiveBundles');
+        if (act) {
+            act.textContent = account.activeBundles.length
+                ? account.activeBundles[account.activeBundles.length - 1]
+                : 'None';
+        }
     },
 
     // ── toast ────────────────────────────────────────────────────
     showToast(title, body, type) {
         const wrap = document.getElementById('toastContainer');
         const el   = document.createElement('div');
-        el.className = 'toast' + (type === 'error' ? ' error' : '');
-        el.innerHTML = `<div class="toast-title">${title}</div><div class="toast-body">${body.replace(/\n/g,'<br>')}</div>`;
+        el.className = 'toast' + (type ? ' ' + type : '');
+        el.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-body">${body.replace(/\n/g,'<br>')}</div>
+        `;
         wrap.appendChild(el);
         setTimeout(() => el.remove(), 5000);
     }
 };
 
-// ── keyboard: Enter submits ──────────────────────────────────────
+// ── keyboard: Enter submits, any key resets timer ─────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('ussdInputField').addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            app.ussdSend();
-        }
-        // any key press resets the timer
+    const field = document.getElementById('ussdInputField');
+    field.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); app.ussdSend(); }
         timer.reset();
     });
 });
 
-// ── phone clock ──────────────────────────────────────────────────
+// ── phone clock ───────────────────────────────────────────────────
 function updateClock() {
     const now   = new Date();
-    const hh    = String(now.getHours()).padStart(2, '0');
-    const mm    = String(now.getMinutes()).padStart(2, '0');
+    const hh    = String(now.getHours()).padStart(2,'0');
+    const mm    = String(now.getMinutes()).padStart(2,'0');
     const time  = hh + ':' + mm;
 
     const days   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
