@@ -1142,6 +1142,95 @@
             40%            { transform: scale(1.0); opacity: 1;   }
         }
 
+        /* ── footer ──────────────────────────────────────────────────── */
+        .site-footer {
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            padding: 28px 24px;
+            margin-top: 40px;
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .footer-links a {
+            font-size: 0.78rem;
+            color: var(--coral-dark);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover { text-decoration: underline; }
+
+        .footer-okoa {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+            line-height: 1.6;
+        }
+
+        .footer-okoa strong { color: var(--text-mid); }
+
+        .footer-copy {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
+
+        /* ── global focus rings (keyboard navigation) ────────────────── */
+        /* suppress the default browser ring for mouse users, keep it for keyboard */
+        :focus { outline: none; }
+
+        :focus-visible {
+            outline: 2px solid var(--coral);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* override outline-offset for inputs that already have a border */
+        .ussd-input:focus-visible,
+        .topup-input:focus-visible {
+            outline: 2px solid var(--coral);
+            outline-offset: 0;
+        }
+
+        /* ── reduced-motion: disable all animations for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
         /* ── responsive ──────────────────────────────────────────────── */
         @media (max-width: 600px) {
             .top-bar         { padding: 0 14px; height: 54px; }
@@ -1153,7 +1242,16 @@
             .phone-wrap      { width: 100%; max-width: 320px; }
             .category-tabs   { width: 100%; }
             .cat-tab         { flex: 1; text-align: center; }
-            .topup-row       { margin-left: 0; }
+            .topup-row       { margin-left: 0; width: 100%; flex-wrap: wrap; }
+            .topup-input     { flex: 1; min-width: 80px; }
+            .footer-row      { flex-direction: column; }
+            .footer-links    { gap: 12px; }
+            .account-strip   { gap: 16px; }
+        }
+
+        @media (max-width: 400px) {
+            .mode-toggle     { gap: 0; }
+            .mode-btn        { padding: 6px 12px; font-size: 0.78rem; }
         }
     </style>
 </head>
@@ -1327,7 +1425,7 @@
 
         <div class="ussd-instructions">
             <h2>Dial *188#</h2>
-            <p>Press the button below to open a USSD session. Type a number and press <strong>Send</strong> or <strong>Enter</strong> to navigate — exactly like on a Safaricom handset.</p>
+            <p>Press the button below to open a USSD session. Type a number and press <strong>Send</strong> or <strong>Enter</strong> to navigate — exactly like on a Safaricom handset. Press <strong>Escape</strong> to end the session at any time.</p>
             <button class="dial-btn" id="dialBtn" onclick="app.dialUssd()">Dial *188#</button>
         </div>
 
@@ -1457,6 +1555,34 @@
 
 <!-- toast container -->
 <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<!-- site footer -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-row">
+            <p class="footer-disclaimer">
+                This is a simulator built for educational and portfolio purposes only.
+                It does not connect to Safaricom's network and does not perform real transactions.
+                Bundle prices and validity periods shown are based on the official Safaricom SMS Bundles
+                Terms and Conditions (Section 2, last updated August 2023).
+                For actual purchases, dial <strong>*188#</strong> on a Safaricom line.
+            </p>
+            <div class="footer-links">
+                <a href="https://www.safaricom.co.ke" target="_blank" rel="noopener">safaricom.co.ke</a>
+                <a href="https://github.com/Martin888Maina/JS-Safaricom-SMS-Bundle-Program" target="_blank" rel="noopener">GitHub</a>
+            </div>
+        </div>
+        <p class="footer-okoa">
+            <strong>Okoa Calls &amp; SMS:</strong> Eligible prepay subscribers can advance Minutes and SMS bundles via Okoa Jahazi.
+            Dial <strong>*456#</strong>, <strong>*444#</strong>, or <strong>*131#</strong>, or use the MySafaricom App.
+            Credit advances are repaid from subsequent top-ups within 120 hours.
+            Roaming subscribers and certain account types are excluded.
+        </p>
+        <p class="footer-copy">
+            &copy; 2025 Martin Maina &mdash; MIT License &mdash; Simulator version 1.0
+        </p>
+    </div>
+</footer>
 
 <script>
 // ── bundle catalogue ──────────────────────────────────────────────
@@ -2221,13 +2347,57 @@ const app = {
     }
 };
 
-// ── keyboard: Enter submits, any key resets timer ─────────────────
+// ── keyboard bindings ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+    // Enter submits USSD input; any keypress resets the session timer
     const field = document.getElementById('ussdInputField');
     field.addEventListener('keydown', e => {
         if (e.key === 'Enter') { e.preventDefault(); app.ussdSend(); }
         timer.reset();
     });
+
+    // Escape closes the web modal or the USSD session
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        const modal = document.getElementById('webModal');
+        if (modal.classList.contains('open')) { app.closeWebModal(); return; }
+        if (session.active) { app.ussdClose(); }
+    });
+
+    // focus trap inside the web confirm modal — Tab/Shift+Tab stays inside
+    const modalBox = document.querySelector('.modal-box');
+    modalBox.addEventListener('keydown', e => {
+        if (e.key !== 'Tab') return;
+        const modal = document.getElementById('webModal');
+        if (!modal.classList.contains('open')) return;
+
+        const focusable = Array.from(
+            modalBox.querySelectorAll('button:not([disabled]), input, [tabindex]:not([tabindex="-1"])')
+        ).filter(el => el.offsetParent !== null); // only visible elements
+
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+            if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+            if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+        }
+    });
+
+    // move focus into modal when it opens
+    const openObserver = new MutationObserver(() => {
+        const modal = document.getElementById('webModal');
+        if (modal.classList.contains('open')) {
+            // focus the Cancel button so keyboard users can navigate immediately
+            setTimeout(() => {
+                const cancelBtn = modal.querySelector('.modal-cancel');
+                if (cancelBtn) cancelBtn.focus();
+            }, 50);
+        }
+    });
+    openObserver.observe(document.getElementById('webModal'), { attributes: true, attributeFilter: ['class'] });
 });
 
 // ── phone clock ───────────────────────────────────────────────────

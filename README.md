@@ -1,166 +1,191 @@
 # Safaricom SMS Bundle Simulator
 
-An interactive web-based simulator that replicates the Safaricom SMS bundle USSD menu interface. This application provides an intuitive and visually appealing way to explore all available SMS bundle options that are typically accessed through the *188# USSD code.
+An interactive browser-based simulator that replicates the Safaricom `*188#` SMS bundle experience. The application runs entirely in a single HTML file with no dependencies or build tools required.
 
-## Features
+It offers two modes of interaction: a modern web catalog for browsing and purchasing bundles, and a USSD dialog simulator that mirrors the real numeric menu flow you see when dialing `*188#` on a Safaricom line.
 
-- **Interactive USSD Simulation**: Navigate through the complete Safaricom SMS bundle menu system with an authentic user experience
-- **Modern User Interface**: Clean, responsive design with smooth animations and transitions
-- **Phone Simulator Display**: Visual representation of a mobile phone interface for enhanced realism
-- **Complete Menu Coverage**: All SMS bundle options including daily, weekly, monthly, and unlimited plans
-- **Responsive Design**: Optimized for seamless viewing on desktop, tablet, and mobile devices
-- **No External Dependencies**: Pure HTML, CSS, and JavaScript - runs entirely in the browser
+---
 
-## Live Demo
+## Modes
 
-Simply open the `Index.html` file in any modern web browser to start exploring the SMS bundle options.
+### Web Mode
 
-## Available SMS Bundle Options
+A structured bundle catalog displaying all available SMS bundles organised by type: Daily, Weekly, and Monthly. Each bundle card shows the SMS count, price, validity period, and a Fair Usage Policy notice for unlimited bundles.
 
-The simulator includes all major Safaricom SMS bundle categories:
+Selecting a bundle opens a confirmation modal where you choose your payment method (Airtime or M-PESA) before the purchase processes. A simulated spinning indicator appears during the 2-second processing delay, after which the balance is deducted and a confirmation toast is shown.
 
-- **Unlimited SMS Bundles**: Daily and weekly unlimited SMS packages
-- **Daily SMS Bundles**: 20, 200, or unlimited SMS options
-- **Weekly SMS Bundles**: 100, 1000, or unlimited SMS packages
-- **Monthly SMS Bundles**: 1500 or 3500 SMS packages
-- **My5 Unlimited SMS**: Special service for unlimited SMS to 5 favorite numbers
-- **Gift Bundles**: Purchase SMS bundles for other phone numbers
-- **Balance Check**: Simulate balance inquiry functionality
-- **Chat Ibambe**: SMS tracking and bonus balance features
+Additional web mode features:
+
+- **Top-up control** in the account strip — enter any amount between Ksh 5 and Ksh 9,999 to add simulated airtime
+- **Purchase history panel** below the catalog — every purchase is logged with its bundle type, time, payment method, and price
+- **Balance flash** — the top-bar balance chip turns green briefly whenever a balance change occurs
+- **Ripple animation** on the Buy Now button
+
+### USSD Mode
+
+A pixel-faithful replica of the real Safaricom USSD dialog. Press "Dial *188#" to open a session on the simulated phone screen. Navigate using numeric replies, exactly as you would on a real handset.
+
+USSD mode features:
+
+- Simulated phone frame with status bar showing live clock, animated signal bars, network label, and battery indicator
+- 20-second session countdown timer with a visible progress bar that pulses red in the final 5 seconds
+- Screen transition animations between each USSD screen
+- Input field shake animation on invalid entry
+- Animated processing screen with bouncing dots
+- SMS notification banner that slides down over the phone screen after a successful purchase, replicating a real Safaricom confirmation SMS
+- Slow network toggle — switches processing delay between 1.8 seconds (fast) and 3.5 seconds (slow) for demonstrating the processing state
+- `aria-live` region on the USSD content area so screen readers announce screen changes
+
+---
+
+## Bundle Catalogue
+
+All bundle data is sourced from the official Safaricom SMS Bundles Terms and Conditions, Section 2 (last updated August 2023).
+
+### Daily SMS Bundles — valid 24 hours
+
+| SMS | Price (Ksh) |
+|-----|-------------|
+| 20  | 5           |
+| 200 | 10          |
+| Unlimited | 20  |
+
+### Weekly SMS Bundles — valid 7 days, On-Net and Off-Net
+
+| SMS | Price (Ksh) |
+|-----|-------------|
+| 100  | 20         |
+| 1000 | 30         |
+| Unlimited | 50 |
+
+### Monthly SMS Bundles — valid 30 days, On-Net and Off-Net
+
+| SMS  | Price (Ksh) |
+|------|-------------|
+| 1500 | 100         |
+| 3500 | 200         |
+
+Unlimited bundles are subject to a Fair Usage Policy of 1,000 SMS per day and 7,000 SMS per week.
+
+---
+
+## USSD Flow
+
+The complete flow available in USSD mode:
+
+```
+Dial *188#
+  1. Buy SMS Bundles
+       1. Daily SMS   → select bundle → confirm → payment → processing → success
+       2. Weekly SMS  → select bundle → confirm → payment → processing → success
+       3. Monthly SMS → select bundle → confirm → payment → processing → success
+  2. Check Balance    → shows airtime balance and active bundles (terminal)
+  3. Buy for Another Number → enter recipient number → category → bundle → confirm → payment → success
+  4. Unsubscribe      → confirm → processing → success
+```
+
+Payment method is selected on a dedicated screen (Airtime or M-PESA) before processing begins. If the balance is insufficient, a clear error message is shown without deducting anything.
+
+---
+
+## Simulated Account
+
+The application maintains a simulated account state for the duration of the browser session:
+
+- Starting airtime balance: Ksh 150.00
+- Balance decreases by the bundle price on each successful purchase
+- Balance increases using the top-up control in the account strip
+- Active bundles are displayed in the account strip and in the USSD balance check screen
+- All purchases are logged in the purchase history panel (web mode)
+
+---
+
+## Keyboard Support
+
+| Key | Action |
+|-----|--------|
+| Enter | Submit USSD reply |
+| Escape | Close web confirm modal or end USSD session |
+| Tab / Shift+Tab | Cycle through focusable elements; trapped inside the modal while it is open |
+
+All interactive elements have visible focus rings when navigated by keyboard. Animations are disabled automatically when the operating system has `prefers-reduced-motion` enabled.
+
+---
 
 ## Installation
-
-### Option 1: Clone the Repository
 
 ```bash
 git clone https://github.com/Martin888Maina/JS-Safaricom-SMS-Bundle-Program.git
 cd JS-Safaricom-SMS-Bundle-Program
 ```
 
-### Option 2: Download ZIP
+Open `Index.html` in any modern web browser. No server, build tools, or internet connection required (fonts load from Google Fonts if available).
 
-1. Click the "Code" button on the GitHub repository page
-2. Select "Download ZIP"
-3. Extract the ZIP file to your desired location
+---
 
 ## Usage
 
-1. Navigate to the project directory
-2. Open `Index.html` in your preferred web browser
-3. Click "Start Exploring" to begin navigating the menu
-4. Select options by clicking on the menu items
-5. Use the "Back" button to return to previous menus or "Main Menu" to start over
+**Web Mode:**
+1. Open `Index.html` in a browser
+2. Use the top-up field in the account strip to adjust your simulated balance if needed
+3. Select a bundle tab: Daily, Weekly, or Monthly
+4. Click "Buy Now" on the desired bundle
+5. Choose payment method in the confirmation modal
+6. Click Confirm — the purchase processes and your balance updates
+
+**USSD Mode:**
+1. Switch to "USSD Mode" using the toggle in the top bar
+2. Optionally enable "Simulate slow network" to extend the processing delay
+3. Click "Dial *188#" to open a session
+4. Read the menu and type a number to navigate
+5. Press Enter or tap "Send" to submit each reply
+6. Follow the flow through bundle selection, confirmation, and payment
+7. Press Escape at any time to end the session
+
+---
 
 ## Technology Stack
 
-- **HTML5**: Semantic markup and modern document structure
-- **CSS3**: Custom styling with CSS variables, flexbox, animations, and responsive design
-- **JavaScript (ES6+)**: Object-oriented programming with classes, modern syntax, and DOM manipulation
-- **Google Fonts**: Poppins and Inter font families for professional typography
+- HTML5, CSS3, JavaScript ES6+ — no frameworks or build tools
+- Google Fonts: Inter and Poppins
+- Single file: `Index.html`
+
+---
 
 ## Project Structure
 
 ```
 JS-Safaricom-SMS-Bundle-Program/
-├── Index.html          # Main application file containing HTML, CSS, and JavaScript
-├── README.md           # Project documentation
-├── LICENSE             # MIT License
-└── LICENSE.txt         # Original license file
+├── Index.html                  Main application file
+├── favicon.png                 Project favicon
+├── README.md                   Project documentation
+├── LICENSE                     MIT License
+├── .gitignore                  Excludes local implementation guides
 ```
-
-## Browser Compatibility
-
-The application is compatible with all modern web browsers:
-
-- Google Chrome (version 90+)
-- Mozilla Firefox (version 88+)
-- Microsoft Edge (version 90+)
-- Safari (version 14+)
-- Opera (version 76+)
-
-## Code Architecture
-
-The application is built using object-oriented JavaScript with a `SafaricomUSSD` class that manages:
-
-- Menu state and navigation history
-- Dynamic content rendering
-- User interaction handling
-- Input validation and error management
-- Result display and feedback
-
-Key methods include:
-- `showMainMenu()`: Displays the primary menu options
-- `selectOption()`: Handles user selections and routing
-- `renderMenu()`: Generic menu rendering system
-- `showResult()`: Success message display
-- `showError()`: Error feedback to users
-
-## Customization
-
-The application uses CSS variables for easy theme customization. Key color variables are defined in the `:root` selector:
-
-```css
---primary-coral: #E07856;
---primary-dark: #D35F3C;
---secondary-mint: #52D4A3;
---secondary-dark: #3AB88A;
---bg-cream: #F9F5F0;
-```
-
-Modify these values in the `<style>` section to change the color scheme.
-
-## Educational Purpose
-
-This project serves as an educational demonstration of:
-
-- Building interactive web applications without frameworks
-- Implementing state management in vanilla JavaScript
-- Creating responsive and accessible user interfaces
-- Object-oriented programming principles in JavaScript
-- Modern CSS techniques including animations and transitions
-
-## Contributing
-
-Contributions are welcome! If you have suggestions for improvements or find any issues:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/improvement`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'Add some improvement'`)
-5. Push to the branch (`git push origin feature/improvement`)
-6. Open a Pull Request
-
-## Disclaimer
-
-This is a simulator for educational and demonstration purposes only. It does not connect to Safaricom's actual USSD system and does not perform real transactions. For actual SMS bundle purchases, please dial *188# on your Safaricom line or visit the official Safaricom website.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Author
-
-**Martin Maina**
-
-- GitHub: [@Martin888Maina](https://github.com/Martin888Maina)
-
-## Acknowledgments
-
-- Safaricom Kenya for the original USSD menu structure and SMS bundle offerings
-- The open-source community for inspiration and best practices
-- Google Fonts for providing the Poppins and Inter font families
-
-## Future Enhancements
-
-Potential improvements for future versions:
-
-- Add keyboard navigation support for accessibility
-- Implement search functionality for quick bundle lookup
-- Add price comparison charts between different bundles
-- Include bundle validity period information
-- Add dark mode toggle option
-- Create multi-language support (English and Swahili)
 
 ---
 
-For questions, feedback, or support, please open an issue on the GitHub repository.
+## Browser Compatibility
+
+- Google Chrome 90 and above
+- Mozilla Firefox 88 and above
+- Microsoft Edge 90 and above
+- Safari 14 and above
+
+---
+
+## Disclaimer
+
+This is a simulator built for educational and portfolio purposes. It does not connect to Safaricom's network and does not perform real transactions. Bundle data is based on publicly available Safaricom Terms and Conditions. For actual bundle purchases, dial `*188#` on a Safaricom line or visit the official Safaricom website at www.safaricom.co.ke.
+
+---
+
+## License
+
+MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Author
+
+Martin Maina — [github.com/Martin888Maina](https://github.com/Martin888Maina)
