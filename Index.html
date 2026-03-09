@@ -4,844 +4,1920 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Interactive Safaricom SMS Bundle Simulator - Explore SMS bundle options through an intuitive USSD interface simulation">
-    <meta name="keywords" content="Safaricom, SMS bundles, USSD simulator, Kenya mobile services">
+    <meta name="description" content="Interactive Safaricom SMS Bundle Simulator - Buy SMS bundles via USSD or web interface, just like dialing *188#">
+    <meta name="keywords" content="Safaricom, SMS bundles, USSD simulator, *188#, Kenya mobile">
     <meta name="author" content="Martin888Maina">
     <title>Safaricom SMS Bundle Simulator | *188#</title>
 
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png">
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* CSS Variables for the unique color scheme */
+        /* ── design tokens ─────────────────────────────────────────── */
         :root {
-            --primary-coral: #E07856;
-            --primary-dark: #D35F3C;
-            --secondary-mint: #52D4A3;
-            --secondary-dark: #3AB88A;
-            --bg-cream: #F9F5F0;
-            --bg-light: #FAF8F5;
-            --text-dark: #2C3539;
-            --text-medium: #5A6670;
-            --accent-amber: #F5A962;
-            --white: #FFFFFF;
-            --shadow-sm: 0 2px 8px rgba(224, 120, 86, 0.1);
-            --shadow-md: 0 4px 16px rgba(224, 120, 86, 0.15);
-            --shadow-lg: 0 8px 32px rgba(224, 120, 86, 0.2);
+            --coral:        #E07856;
+            --coral-dark:   #D35F3C;
+            --mint:         #52D4A3;
+            --mint-dark:    #3AB88A;
+            --bg-page:      #F2F2F2;
+            --white:        #FFFFFF;
+            --text:         #1A1A1A;
+            --text-mid:     #555555;
+            --text-muted:   #888888;
+            --border:       #E5E7EB;
+            --shadow-sm:    0 1px 4px rgba(0,0,0,0.08);
+            --shadow-md:    0 4px 12px rgba(0,0,0,0.12);
+            --shadow-lg:    0 8px 24px rgba(0,0,0,0.16);
+            --radius:       10px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, var(--bg-cream) 0%, var(--bg-light) 100%);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-page);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            color: var(--text-dark);
+            color: var(--text);
         }
 
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            display: flex;
-            gap: 40px;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        /* Header Section */
-        .header-section {
-            flex: 1;
-            min-width: 300px;
-            max-width: 500px;
-        }
-
-        .header-section h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            color: var(--primary-dark);
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .header-section p {
-            font-size: 1.1rem;
-            color: var(--text-medium);
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .feature-list {
-            list-style: none;
-            margin-top: 2rem;
-        }
-
-        .feature-list li {
-            padding: 0.75rem 0;
-            color: var(--text-medium);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .feature-list li:before {
-            content: "✓";
-            color: var(--secondary-mint);
-            font-weight: bold;
-            font-size: 1.25rem;
-        }
-
-        /* Phone Simulator */
-        .phone-simulator {
+        /* ── top nav bar ────────────────────────────────────────────── */
+        .top-bar {
             background: var(--white);
-            border-radius: 40px;
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .top-bar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--coral);
+        }
+
+        .top-bar-brand span {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.2px;
+        }
+
+        .top-bar-brand small {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-left: 2px;
+        }
+
+        /* mode toggle */
+        .mode-toggle {
+            display: flex;
+            background: var(--bg-page);
+            border-radius: 8px;
+            padding: 3px;
+            gap: 2px;
+            border: 1px solid var(--border);
+        }
+
+        .mode-btn {
+            padding: 6px 18px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            background: transparent;
+            color: var(--text-mid);
+        }
+
+        .mode-btn.active {
+            background: var(--white);
+            color: var(--coral-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* balance chip */
+        .balance-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 14px;
+        }
+
+        .balance-chip-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .balance-chip-amount {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* ── main layout ─────────────────────────────────────────────── */
+        .app-body {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 20px 60px;
+        }
+
+        /* ── section visibility ──────────────────────────────────────── */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* ── WEB MODE ────────────────────────────────────────────────── */
+        .web-hero {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .web-hero-text h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            color: var(--text);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .web-hero-text p {
+            font-size: 0.9rem;
+            color: var(--text-mid);
+            max-width: 460px;
+            line-height: 1.6;
+        }
+
+        .web-hero-code {
+            background: var(--bg-page);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 24px;
+            text-align: center;
+        }
+
+        .web-hero-code .ussd-code {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--coral-dark);
+        }
+
+        .web-hero-code small {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* account info strip */
+        .account-strip {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .acct-item label {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .acct-item .acct-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .acct-item .acct-value.balance-positive {
+            color: #1A7A4A;
+        }
+
+        /* bundle category tabs */
+        .category-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 4px;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+
+        .cat-tab {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 7px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            background: transparent;
+            color: var(--text-mid);
+        }
+
+        .cat-tab.active {
+            background: var(--coral);
+            color: var(--white);
+        }
+
+        /* bundle grid */
+        .bundle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .bundle-category { display: none; }
+        .bundle-category.active { display: grid; }
+
+        .bundle-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 20px;
-            box-shadow: var(--shadow-lg);
-            width: 380px;
-            position: relative;
-        }
-
-        .phone-frame {
-            background: linear-gradient(135deg, var(--text-dark) 0%, #1a1f23 100%);
-            border-radius: 30px;
-            padding: 16px;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .phone-notch {
-            background: #0a0c0e;
-            height: 25px;
-            width: 60%;
-            margin: 0 auto 12px;
-            border-radius: 0 0 20px 20px;
-        }
-
-        /* USSD Screen */
-        .ussd-screen {
-            background: var(--bg-light);
-            border-radius: 16px;
-            min-height: 420px;
-            padding: 24px;
+            transition: border-color 0.2s, box-shadow 0.2s;
             position: relative;
             overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        .screen-header {
-            text-align: center;
-            padding-bottom: 16px;
-            border-bottom: 2px solid var(--primary-coral);
-            margin-bottom: 20px;
+        .bundle-card:hover {
+            border-color: var(--coral);
+            box-shadow: var(--shadow-md);
         }
 
-        .screen-header h2 {
+        /* top accent line per category */
+        .bundle-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--coral);
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .bundle-card.unlimited::before { background: var(--mint-dark); }
+
+        .bundle-sms-count {
             font-family: 'Poppins', sans-serif;
-            font-size: 1.25rem;
-            color: var(--primary-dark);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .bundle-sms-count span {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-mid);
+        }
+
+        .bundle-validity {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .bundle-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--coral-dark);
             margin-bottom: 4px;
         }
 
-        .screen-header .code {
-            font-size: 0.9rem;
-            color: var(--text-medium);
-            font-weight: 500;
+        .bundle-fup {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            font-style: italic;
         }
 
-        .menu-content {
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .menu-item {
-            background: var(--white);
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .menu-item:hover {
-            transform: translateX(4px);
-            border-color: var(--primary-coral);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .menu-item-number {
-            background: linear-gradient(135deg, var(--primary-coral), var(--primary-dark));
+        .buy-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--coral);
             color: var(--white);
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-            flex-shrink: 0;
-        }
-
-        .menu-item-text {
-            color: var(--text-dark);
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        /* Input Section */
-        .input-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        .input-display {
-            background: var(--white);
-            padding: 14px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 12px;
-            min-height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--text-dark);
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 14px;
             border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            border-radius: 7px;
             font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--secondary-mint), var(--secondary-dark));
-            color: var(--white);
-            box-shadow: var(--shadow-sm);
-        }
+        .buy-btn:hover { background: var(--coral-dark); }
+        .buy-btn:active { transform: scale(0.98); }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-secondary {
+        /* notice strip */
+        .info-strip {
             background: var(--white);
-            color: var(--text-dark);
-            border: 2px solid var(--primary-coral);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--coral);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            font-size: 0.82rem;
+            color: var(--text-mid);
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
-        .btn-secondary:hover {
-            background: var(--primary-coral);
-            color: var(--white);
+        /* ── NOTIFICATION TOAST ─────────────────────────────────────── */
+        .toast-container {
+            position: fixed;
+            bottom: 28px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
         }
 
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Result Message */
-        .result-message {
-            background: linear-gradient(135deg, var(--secondary-mint), var(--secondary-dark));
-            color: var(--white);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin: 20px 0;
-            animation: slideIn 0.3s ease-out;
+        .toast {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--mint-dark);
+            border-radius: 8px;
+            padding: 14px 18px;
+            min-width: 280px;
+            max-width: 360px;
             box-shadow: var(--shadow-md);
+            animation: toastIn 0.3s ease-out;
+            pointer-events: auto;
         }
 
-        .result-message h3 {
+        .toast.error { border-left-color: #D32F2F; }
+        .toast-title { font-weight: 600; font-size: 0.875rem; margin-bottom: 3px; color: var(--text); }
+        .toast-body { font-size: 0.82rem; color: var(--text-mid); line-height: 1.5; }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ── WEB CONFIRM MODAL ──────────────────────────────────────── */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-backdrop.open { display: flex; }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 28px;
+            width: 90%;
+            max-width: 380px;
+            box-shadow: var(--shadow-lg);
+            animation: modalIn 0.2s ease-out;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-title {
             font-family: 'Poppins', sans-serif;
             font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .result-message p {
-            font-size: 0.95rem;
-            line-height: 1.5;
-            opacity: 0.95;
-        }
-
-        /* Error Message */
-        .error-message {
-            background: linear-gradient(135deg, #FF6B6B, #E05252);
-            color: var(--white);
-            padding: 16px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 16px 0;
-            animation: shake 0.4s ease-out;
-        }
-
-        @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-8px);
-            }
-
-            75% {
-                transform: translateX(8px);
-            }
-        }
-
-        /* Welcome Screen */
-        .welcome-screen {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .welcome-screen h3 {
-            font-family: 'Poppins', sans-serif;
-            color: var(--primary-dark);
-            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
             margin-bottom: 16px;
         }
 
-        .welcome-screen p {
-            color: var(--text-medium);
-            line-height: 1.6;
-            margin-bottom: 24px;
+        .modal-bundle-info {
+            background: var(--bg-page);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 16px;
         }
 
-        .start-btn {
-            background: linear-gradient(135deg, var(--primary-coral), var(--primary-dark));
-            color: var(--white);
-            padding: 16px 40px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
+        .modal-bundle-info p { font-size: 0.875rem; color: var(--text-mid); line-height: 1.7; }
+        .modal-bundle-info strong { color: var(--text); }
+
+        .modal-fup {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 16px;
+            padding: 0 2px;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-page);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: border-color 0.15s;
+        }
+
+        .payment-option:hover { border-color: var(--coral); }
+        .payment-option input[type="radio"] { accent-color: var(--coral); width: 16px; height: 16px; }
+        .payment-option label { font-size: 0.875rem; font-weight: 600; color: var(--text); cursor: pointer; }
+        .payment-option small { font-size: 0.75rem; color: var(--text-muted); display: block; }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-cancel {
+            flex: 1;
+            padding: 11px;
+            background: var(--white);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+
+        .modal-cancel:hover { border-color: var(--coral); }
+
+        .modal-confirm {
+            flex: 1;
+            padding: 11px;
+            background: var(--coral);
+            color: var(--white);
+            border: none;
+            border-radius: 7px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .modal-confirm:hover { background: var(--coral-dark); }
+
+        /* processing spinner inside modal */
+        .processing-state {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .processing-state.active { display: block; }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border);
+            border-top-color: var(--coral);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .processing-state p {
+            font-size: 0.875rem;
+            color: var(--text-mid);
+        }
+
+        .modal-form-content { display: block; }
+
+        /* ── USSD MODE ─────────────────────────────────────────────── */
+        .ussd-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 12px;
+        }
+
+        .ussd-instructions {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            max-width: 480px;
+            width: 100%;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        .ussd-instructions h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .ussd-instructions p {
+            font-size: 0.875rem;
+            color: var(--text-mid);
+            line-height: 1.6;
+        }
+
+        .dial-btn {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 12px 32px;
+            background: var(--coral);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .dial-btn:hover {
+            background: var(--coral-dark);
             box-shadow: var(--shadow-md);
         }
 
-        .start-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
+        .dial-btn:active { transform: scale(0.97); }
+
+        /* phone frame */
+        .phone-wrap {
+            background: #1A1A1A;
+            border-radius: 44px;
+            padding: 18px 14px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.06);
+            width: 340px;
+            position: relative;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                gap: 30px;
-            }
-
-            .header-section h1 {
-                font-size: 2rem;
-            }
-
-            .phone-simulator {
-                width: 100%;
-                max-width: 380px;
-            }
-
-            .feature-list {
-                margin-top: 1.5rem;
-            }
+        .phone-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px 10px;
         }
 
-        @media (max-width: 480px) {
-            .header-section h1 {
-                font-size: 1.75rem;
-            }
+        .status-time {
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
 
-            .phone-simulator {
-                padding: 12px;
-            }
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-            .ussd-screen {
-                padding: 16px;
-                min-height: 380px;
-            }
+        /* signal bars */
+        .signal-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 12px;
+        }
+
+        .signal-bars span {
+            background: #fff;
+            border-radius: 1px;
+            width: 3px;
+        }
+
+        .signal-bars span:nth-child(1) { height: 4px; }
+        .signal-bars span:nth-child(2) { height: 6px; }
+        .signal-bars span:nth-child(3) { height: 9px; }
+        .signal-bars span:nth-child(4) { height: 12px; }
+
+        .status-network {
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .status-battery {
+            width: 20px;
+            height: 10px;
+            border: 1.5px solid #fff;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .status-battery::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: 2px;
+            width: 2px;
+            height: 4px;
+            background: #fff;
+            border-radius: 0 1px 1px 0;
+        }
+
+        .battery-fill {
+            position: absolute;
+            inset: 1px;
+            border-radius: 1px;
+            background: #4ADE80;
+            width: 75%;
+        }
+
+        /* phone notch */
+        .phone-notch {
+            background: #0a0c0e;
+            height: 22px;
+            width: 56%;
+            margin: 0 auto 8px;
+            border-radius: 0 0 18px 18px;
+        }
+
+        /* the phone screen area */
+        .phone-screen {
+            background: var(--white);
+            border-radius: 20px;
+            min-height: 460px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* phone home screen (shown when USSD is not active) */
+        .phone-home {
+            width: 100%;
+            height: 100%;
+            min-height: 460px;
+            background: linear-gradient(160deg, #1c2a3a 0%, #0d1b2a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .home-time {
+            color: #fff;
+            font-size: 2.8rem;
+            font-weight: 300;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -1px;
+        }
+
+        .home-date {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.82rem;
+        }
+
+        .home-hint {
+            margin-top: 28px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        /* ── USSD DIALOG (overlays phone screen) ────────────────────── */
+        .ussd-backdrop {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.22);
+            border-radius: 20px;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .ussd-backdrop.open {
+            display: flex;
+        }
+
+        .ussd-dialog {
+            width: 88%;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.20);
+            overflow: hidden;
+            animation: dialogIn 0.18s ease-out;
+        }
+
+        @keyframes dialogIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* USSD header bar */
+        .ussd-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ussd-network {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 0.3px;
+        }
+
+        .ussd-code-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* USSD content area */
+        .ussd-content {
+            padding: 12px 14px 10px;
+            min-height: 140px;
+        }
+
+        .ussd-content-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .ussd-menu-text {
+            font-family: ui-monospace, 'Roboto Mono', 'Courier New', monospace;
+            font-size: 0.78rem;
+            line-height: 1.65;
+            color: var(--text);
+            white-space: pre-wrap;
+        }
+
+        .ussd-body-text {
+            font-size: 0.8rem;
+            color: var(--text-mid);
+            line-height: 1.65;
+            white-space: pre-wrap;
+        }
+
+        /* USSD input zone */
+        .ussd-input-zone {
+            padding: 8px 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .ussd-input-label {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .ussd-input {
+            width: 100%;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 0 10px;
+            font-size: 0.9rem;
+            font-family: ui-monospace, monospace;
+            color: var(--text);
+            background: var(--white);
+            outline: none;
+            transition: border-color 0.15s;
+            caret-color: var(--coral);
+        }
+
+        .ussd-input:focus { border-color: var(--coral); }
+
+        /* USSD action buttons */
+        .ussd-actions {
+            display: flex;
+            gap: 8px;
+            padding: 8px 14px 12px;
+        }
+
+        .ussd-cancel {
+            flex: 1;
+            padding: 10px;
+            background: var(--white);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 44px;
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        .ussd-cancel:hover { border-color: var(--coral); color: var(--coral-dark); }
+
+        .ussd-send {
+            flex: 1;
+            padding: 10px;
+            background: var(--coral);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 44px;
+            transition: background 0.15s;
+        }
+
+        .ussd-send:hover { background: var(--coral-dark); }
+
+        /* session timer bar */
+        .session-timer-wrap {
+            padding: 0 14px 8px;
+        }
+
+        .session-timer-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3px;
+        }
+
+        .session-bar-track {
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .session-bar-fill {
+            height: 100%;
+            background: var(--coral);
+            border-radius: 2px;
+            transition: width 1s linear;
+        }
+
+        /* processing dots */
+        .ussd-processing {
+            text-align: center;
+            padding: 18px 14px;
+        }
+
+        .ussd-processing p {
+            font-size: 0.82rem;
+            color: var(--text-mid);
+            margin-bottom: 8px;
+        }
+
+        .dots span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--coral);
+            margin: 0 2px;
+            animation: dotBounce 1.2s infinite ease-in-out;
+        }
+
+        .dots span:nth-child(2) { animation-delay: 0.2s; }
+        .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dotBounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40%            { transform: scale(1.0); opacity: 1;   }
+        }
+
+        /* ── RESPONSIVE ──────────────────────────────────────────────── */
+        @media (max-width: 600px) {
+            .top-bar { padding: 0 14px; height: 54px; }
+            .top-bar-brand small { display: none; }
+            .balance-chip { display: none; }
+            .app-body { padding: 20px 12px 48px; }
+            .web-hero { padding: 20px; }
+            .web-hero-text h1 { font-size: 1.25rem; }
+            .phone-wrap { width: 100%; max-width: 320px; }
+            .category-tabs { width: 100%; justify-content: stretch; }
+            .cat-tab { flex: 1; text-align: center; }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- Header Information Section -->
-        <div class="header-section">
-            <h1>Safaricom SMS Bundle Simulator</h1>
-            <p>Experience the complete Safaricom SMS bundle menu interface through this interactive simulator. Navigate
-                through all available options just like dialing *188#.</p>
 
-            <ul class="feature-list">
-                <li>Interactive USSD interface simulation</li>
-                <li>All SMS bundle options included</li>
-                <li>Easy navigation and selection</li>
-                <li>Responsive mobile-friendly design</li>
-            </ul>
+    <!-- top navigation -->
+    <header class="top-bar">
+        <div class="top-bar-brand">
+            <div class="brand-dot"></div>
+            <span>SMS Bundle Simulator <small>*188#</small></span>
         </div>
 
-        <!-- Phone Simulator -->
-        <div class="phone-simulator">
-            <div class="phone-frame">
-                <div class="phone-notch"></div>
-                <div class="ussd-screen" id="ussdScreen">
-                    <!-- Content will be dynamically inserted here -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="btnWebMode" onclick="app.setMode('web')">Web Mode</button>
+            <button class="mode-btn" id="btnUssdMode" onclick="app.setMode('ussd')">USSD Mode</button>
+        </div>
+
+        <div class="balance-chip">
+            <span class="balance-chip-label">Balance</span>
+            <span class="balance-chip-amount" id="topBarBalance">Ksh 150.00</span>
+        </div>
+    </header>
+
+    <!-- web mode view -->
+    <div id="viewWeb" class="view active">
+        <div class="app-body">
+
+            <!-- hero strip -->
+            <div class="web-hero">
+                <div class="web-hero-text">
+                    <h1>Safaricom SMS Bundles</h1>
+                    <p>Browse and purchase SMS bundles below. This simulator replicates the full *188# USSD flow — select a bundle, choose your payment method, and receive confirmation.</p>
                 </div>
+                <div class="web-hero-code">
+                    <div class="ussd-code">*188#</div>
+                    <small>USSD short code</small>
+                </div>
+            </div>
+
+            <!-- account info strip -->
+            <div class="account-strip">
+                <div class="acct-item">
+                    <label>Phone Number</label>
+                    <div class="acct-value" id="webPhoneNum">0712 345 678</div>
+                </div>
+                <div class="acct-item">
+                    <label>Airtime Balance</label>
+                    <div class="acct-value balance-positive" id="webBalance">Ksh 150.00</div>
+                </div>
+                <div class="acct-item">
+                    <label>Active Bundles</label>
+                    <div class="acct-value" id="webActiveBundles">None</div>
+                </div>
+            </div>
+
+            <!-- terms notice -->
+            <div class="info-strip">
+                <strong>Important:</strong> Weekly and Monthly SMS Bundles are valid for On-Net (Safaricom to Safaricom) and Off-Net (Safaricom to other networks) use.
+                Daily bundles expire after 24 hours. Unused SMS do not carry over.
+                Unlimited bundles are subject to a Fair Usage Policy: 1,000 SMS/day and 7,000 SMS/week.
+            </div>
+
+            <!-- category tabs -->
+            <div class="category-tabs">
+                <button class="cat-tab active" onclick="app.switchTab('daily')">Daily</button>
+                <button class="cat-tab" onclick="app.switchTab('weekly')">Weekly</button>
+                <button class="cat-tab" onclick="app.switchTab('monthly')">Monthly</button>
+            </div>
+
+            <!-- daily bundles -->
+            <div class="bundle-grid bundle-category active" id="tab-daily">
+                <div class="bundle-card">
+                    <div class="bundle-sms-count">20 <span>SMS</span></div>
+                    <div class="bundle-validity">Valid 24 hours</div>
+                    <div class="bundle-price">Ksh 5.00</div>
+                    <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'20',price:5,validity:'24 hours',type:'Daily'})">Buy Now</button>
+                </div>
+                <div class="bundle-card">
+                    <div class="bundle-sms-count">200 <span>SMS</span></div>
+                    <div class="bundle-validity">Valid 24 hours</div>
+                    <div class="bundle-price">Ksh 10.00</div>
+                    <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'200',price:10,validity:'24 hours',type:'Daily'})">Buy Now</button>
+                </div>
+                <div class="bundle-card unlimited">
+                    <div class="bundle-sms-count">Unlimited <span>SMS</span></div>
+                    <div class="bundle-validity">Valid 24 hours</div>
+                    <div class="bundle-price">Ksh 20.00</div>
+                    <div class="bundle-fup">FUP: 1,000 SMS/day</div>
+                    <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'Unlimited',price:20,validity:'24 hours',type:'Daily',fup:true})">Buy Now</button>
+                </div>
+            </div>
+
+            <!-- weekly bundles -->
+            <div class="bundle-grid bundle-category" id="tab-weekly">
+                <div class="bundle-card">
+                    <div class="bundle-sms-count">100 <span>SMS</span></div>
+                    <div class="bundle-validity">Valid 7 days &middot; On-Net & Off-Net</div>
+                    <div class="bundle-price">Ksh 20.00</div>
+                    <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'100',price:20,validity:'7 days',type:'Weekly'})">Buy Now</button>
+                </div>
+                <div class="bundle-card">
+                    <div class="bundle-sms-count">1,000 <span>SMS</span></div>
+                    <div class="bundle-validity">Valid 7 days &middot; On-Net & Off-Net</div>
+                    <div class="bundle-price">Ksh 30.00</div>
+                    <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'1000',price:30,validity:'7 days',type:'Weekly'})">Buy Now</button>
+                </div>
+                <div class="bundle-card unlimited">
+                    <div class="bundle-sms-count">Unlimited <span>SMS</span></div>
+                    <div class="bundle-validity">Valid 7 days &middot; On-Net & Off-Net</div>
+                    <div class="bundle-price">Ksh 50.00</div>
+                    <div class="bundle-fup">FUP: 1,000 SMS/day &middot; 7,000 SMS/week</div>
+                    <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'Unlimited',price:50,validity:'7 days',type:'Weekly',fup:true})">Buy Now</button>
+                </div>
+            </div>
+
+            <!-- monthly bundles -->
+            <div class="bundle-grid bundle-category" id="tab-monthly">
+                <div class="bundle-card">
+                    <div class="bundle-sms-count">1,500 <span>SMS</span></div>
+                    <div class="bundle-validity">Valid 30 days &middot; On-Net & Off-Net</div>
+                    <div class="bundle-price">Ksh 100.00</div>
+                    <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'1500',price:100,validity:'30 days',type:'Monthly'})">Buy Now</button>
+                </div>
+                <div class="bundle-card">
+                    <div class="bundle-sms-count">3,500 <span>SMS</span></div>
+                    <div class="bundle-validity">Valid 30 days &middot; On-Net & Off-Net</div>
+                    <div class="bundle-price">Ksh 200.00</div>
+                    <button class="buy-btn" onclick="app.initiateWebPurchase({sms:'3500',price:200,validity:'30 days',type:'Monthly'})">Buy Now</button>
+                </div>
+            </div>
+
+        </div><!-- /app-body -->
+    </div><!-- /viewWeb -->
+
+    <!-- ussd mode view -->
+    <div id="viewUssd" class="view">
+        <div class="app-body ussd-view">
+
+            <div class="ussd-instructions">
+                <h2>USSD Simulator</h2>
+                <p>This simulates dialing <strong>*188#</strong> on a Safaricom line. Press the dial button to open the USSD session, then navigate using numeric replies — exactly like on a real phone.</p>
+                <button class="dial-btn" id="dialBtn" onclick="app.dialUssd()">Dial *188#</button>
+            </div>
+
+            <!-- phone frame -->
+            <div class="phone-wrap">
+                <div class="phone-status-bar">
+                    <span class="status-time" id="phoneTime">12:00</span>
+                    <div class="status-icons">
+                        <div class="signal-bars">
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                        <span class="status-network">Safaricom</span>
+                        <div class="status-battery"><div class="battery-fill"></div></div>
+                    </div>
+                </div>
+
+                <div class="phone-notch"></div>
+
+                <div class="phone-screen" id="phoneScreen">
+                    <!-- home screen -->
+                    <div class="phone-home" id="phoneHome">
+                        <div class="home-time" id="homeTime">12:00</div>
+                        <div class="home-date" id="homeDate">Mon, 9 March</div>
+                        <div class="home-hint">Tap "Dial *188#" to start a USSD session</div>
+                    </div>
+
+                    <!-- USSD dialog — overlays phone screen -->
+                    <div class="ussd-backdrop" id="ussdBackdrop">
+                        <div class="ussd-dialog" id="ussdDialog">
+
+                            <!-- zone 1: header -->
+                            <div class="ussd-header">
+                                <span class="ussd-network">Safaricom</span>
+                                <span class="ussd-code-label" id="ussdCodeLabel">*188#</span>
+                            </div>
+
+                            <!-- zone 2: content -->
+                            <div class="ussd-content" id="ussdContent">
+                                <!-- dynamically populated -->
+                            </div>
+
+                            <!-- zone 3: input (hidden on terminal screens) -->
+                            <div class="ussd-input-zone" id="ussdInputZone">
+                                <label class="ussd-input-label" for="ussdInputField">Reply with a number:</label>
+                                <input
+                                    class="ussd-input"
+                                    id="ussdInputField"
+                                    type="text"
+                                    inputmode="numeric"
+                                    pattern="[0-9]*"
+                                    autocomplete="off"
+                                    aria-label="USSD input field, reply with a number"
+                                    onkeydown="app.ussdKeydown(event)"
+                                />
+                            </div>
+
+                            <!-- session timer -->
+                            <div class="session-timer-wrap" id="sessionTimerWrap">
+                                <div class="session-timer-label">
+                                    <span>Session</span>
+                                    <span id="sessionCountdown">20s</span>
+                                </div>
+                                <div class="session-bar-track">
+                                    <div class="session-bar-fill" id="sessionBarFill" style="width:100%"></div>
+                                </div>
+                            </div>
+
+                            <!-- zone 4: actions -->
+                            <div class="ussd-actions" id="ussdActionsBar">
+                                <button class="ussd-cancel" onclick="app.ussdCancel()">Cancel</button>
+                                <button class="ussd-send" onclick="app.ussdSend()">Send</button>
+                            </div>
+
+                        </div><!-- /ussd-dialog -->
+                    </div><!-- /ussd-backdrop -->
+
+                </div><!-- /phone-screen -->
+            </div><!-- /phone-wrap -->
+
+        </div>
+    </div><!-- /viewUssd -->
+
+    <!-- web purchase confirm modal -->
+    <div class="modal-backdrop" id="webModal">
+        <div class="modal-box">
+            <div class="modal-form-content" id="webModalContent">
+                <div class="modal-title">Confirm Purchase</div>
+                <div class="modal-bundle-info" id="webModalBundleInfo">
+                    <!-- populated dynamically -->
+                </div>
+                <div class="modal-fup" id="webModalFup" style="display:none">
+                    Fair Usage Policy applies: 1,000 SMS/day and 7,000 SMS/week.
+                </div>
+                <div class="payment-options" id="paymentOptions">
+                    <div class="payment-option" onclick="app.selectPayment('airtime')">
+                        <input type="radio" name="payment" id="payAirtime" value="airtime" checked>
+                        <div>
+                            <label for="payAirtime">Airtime</label>
+                            <small>Deducted from current airtime balance</small>
+                        </div>
+                    </div>
+                    <div class="payment-option" onclick="app.selectPayment('mpesa')">
+                        <input type="radio" name="payment" id="payMpesa" value="mpesa">
+                        <div>
+                            <label for="payMpesa">M-PESA</label>
+                            <small>Send Ksh to Till No. 200200</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-cancel" onclick="app.closeWebModal()">Cancel</button>
+                    <button class="modal-confirm" onclick="app.confirmWebPurchase()">Confirm</button>
+                </div>
+            </div>
+            <div class="processing-state" id="webModalProcessing">
+                <div class="spinner"></div>
+                <p>Processing your request...</p>
             </div>
         </div>
     </div>
 
+    <!-- toast container -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
-        /**
-         * SafaricomUSSD Class
-         * Manages the complete USSD SMS bundle menu system
-         * Handles navigation, state management, and user interactions
-         */
-        class SafaricomUSSD {
-            constructor() {
-                this.screen = document.getElementById('ussdScreen');
-                this.currentMenu = 'welcome';
-                this.menuHistory = [];
-                this.userInput = '';
+        // ── bundle data ────────────────────────────────────────────────
+        // source: safaricom_sms_addendum.md section 2
+        const BUNDLES = {
+            daily: [
+                { sms: '20',         price: 5,   validity: '24 hours', type: 'Daily' },
+                { sms: '200',        price: 10,  validity: '24 hours', type: 'Daily' },
+                { sms: 'Unlimited',  price: 20,  validity: '24 hours', type: 'Daily',  fup: true }
+            ],
+            weekly: [
+                { sms: '100',        price: 20,  validity: '7 days',   type: 'Weekly' },
+                { sms: '1000',       price: 30,  validity: '7 days',   type: 'Weekly' },
+                { sms: 'Unlimited',  price: 50,  validity: '7 days',   type: 'Weekly', fup: true }
+            ],
+            monthly: [
+                { sms: '1500',       price: 100, validity: '30 days',  type: 'Monthly' },
+                { sms: '3500',       price: 200, validity: '30 days',  type: 'Monthly' }
+            ]
+        };
 
-                // Initialize the application
-                this.showWelcomeScreen();
+        // ── account state ──────────────────────────────────────────────
+        const account = {
+            balance:       150.00,
+            phoneNumber:  '0712345678',
+            activeBundles: []
+        };
+
+        // ── USSD menu tree (full engine comes in Phase 2) ──────────────
+        // this is the stub tree for Phase 1 — placeholder screens only
+        const USSD_TREE = {
+            root: {
+                id: 'root',
+                title: 'Welcome to Bundles',
+                items: [
+                    { key: '1', text: 'Buy SMS Bundles',       next: 'sms_cat'    },
+                    { key: '2', text: 'Check Balance',         next: 'balance'    },
+                    { key: '3', text: 'Buy for Another Number',next: 'other_entry'},
+                    { key: '4', text: 'Unsubscribe',           next: 'unsub_conf' }
+                ]
+            },
+            sms_cat: {
+                id: 'sms_cat',
+                title: 'SMS Bundles',
+                items: [
+                    { key: '1', text: 'Daily SMS',   next: 'sms_daily'   },
+                    { key: '2', text: 'Weekly SMS',  next: 'sms_weekly'  },
+                    { key: '3', text: 'Monthly SMS', next: 'sms_monthly' },
+                    { key: '4', text: 'Back',        next: 'root'        }
+                ]
+            },
+            sms_daily: {
+                id: 'sms_daily',
+                title: 'Daily SMS',
+                items: [
+                    { key: '1', text: '20 SMS @ Ksh 5',         action: 'purchase', meta: BUNDLES.daily[0] },
+                    { key: '2', text: '200 SMS @ Ksh 10',       action: 'purchase', meta: BUNDLES.daily[1] },
+                    { key: '3', text: 'Unlimited SMS @ Ksh 20', action: 'purchase', meta: BUNDLES.daily[2] },
+                    { key: '4', text: 'Back',                   next: 'sms_cat' }
+                ]
+            },
+            sms_weekly: {
+                id: 'sms_weekly',
+                title: 'Weekly SMS',
+                items: [
+                    { key: '1', text: '100 SMS @ Ksh 20',       action: 'purchase', meta: BUNDLES.weekly[0] },
+                    { key: '2', text: '1000 SMS @ Ksh 30',      action: 'purchase', meta: BUNDLES.weekly[1] },
+                    { key: '3', text: 'Unlimited SMS @ Ksh 50', action: 'purchase', meta: BUNDLES.weekly[2] },
+                    { key: '4', text: 'Back',                   next: 'sms_cat' }
+                ]
+            },
+            sms_monthly: {
+                id: 'sms_monthly',
+                title: 'Monthly SMS',
+                items: [
+                    { key: '1', text: '1500 SMS @ Ksh 100',  action: 'purchase', meta: BUNDLES.monthly[0] },
+                    { key: '2', text: '3500 SMS @ Ksh 200',  action: 'purchase', meta: BUNDLES.monthly[1] },
+                    { key: '3', text: 'Back',                next: 'sms_cat' }
+                ]
+            },
+            balance: {
+                id: 'balance',
+                title: 'Account Balance',
+                dynamic: 'balance',
+                terminal: true
+            },
+            other_entry: {
+                id: 'other_entry',
+                title: 'Buy for Another Number',
+                inputPrompt: 'Enter recipient number:',
+                inputType: 'phone',
+                next: 'other_cat'
+            },
+            other_cat: {
+                id: 'other_cat',
+                title: 'Select Bundle Type',
+                items: [
+                    { key: '1', text: 'Daily SMS',   next: 'other_daily'   },
+                    { key: '2', text: 'Weekly SMS',  next: 'other_weekly'  },
+                    { key: '3', text: 'Monthly SMS', next: 'other_monthly' },
+                    { key: '4', text: 'Back',        next: 'root'          }
+                ]
+            },
+            other_daily: {
+                id: 'other_daily',
+                title: 'Daily SMS (Gift)',
+                items: [
+                    { key: '1', text: '20 SMS @ Ksh 5',         action: 'purchase_other', meta: BUNDLES.daily[0] },
+                    { key: '2', text: '200 SMS @ Ksh 10',       action: 'purchase_other', meta: BUNDLES.daily[1] },
+                    { key: '3', text: 'Unlimited SMS @ Ksh 20', action: 'purchase_other', meta: BUNDLES.daily[2] },
+                    { key: '4', text: 'Back',                   next: 'other_cat' }
+                ]
+            },
+            other_weekly: {
+                id: 'other_weekly',
+                title: 'Weekly SMS (Gift)',
+                items: [
+                    { key: '1', text: '100 SMS @ Ksh 20',       action: 'purchase_other', meta: BUNDLES.weekly[0] },
+                    { key: '2', text: '1000 SMS @ Ksh 30',      action: 'purchase_other', meta: BUNDLES.weekly[1] },
+                    { key: '3', text: 'Unlimited SMS @ Ksh 50', action: 'purchase_other', meta: BUNDLES.weekly[2] },
+                    { key: '4', text: 'Back',                   next: 'other_cat' }
+                ]
+            },
+            other_monthly: {
+                id: 'other_monthly',
+                title: 'Monthly SMS (Gift)',
+                items: [
+                    { key: '1', text: '1500 SMS @ Ksh 100',  action: 'purchase_other', meta: BUNDLES.monthly[0] },
+                    { key: '2', text: '3500 SMS @ Ksh 200',  action: 'purchase_other', meta: BUNDLES.monthly[1] },
+                    { key: '3', text: 'Back',                next: 'other_cat' }
+                ]
+            },
+            unsub_conf: {
+                id: 'unsub_conf',
+                title: 'Unsubscribe',
+                body: 'You will be unsubscribed from all active SMS bundles.',
+                items: [
+                    { key: '1', text: 'Confirm', action: 'unsubscribe' },
+                    { key: '2', text: 'Cancel',  next: 'root' }
+                ]
             }
+        };
 
-            /**
-             * Display the initial welcome screen
-             * This serves as the entry point for the application
-             */
-            showWelcomeScreen() {
-                this.screen.innerHTML = `
-                    <div class="welcome-screen">
-                        <h3>Welcome to Safaricom SMS Bundles</h3>
-                        <p>Click below to explore unlimited SMS bundle options available through the *188# USSD code.</p>
-                        <button class="start-btn" onclick="ussdApp.showMainMenu()">
-                            Start Exploring
-                        </button>
-                    </div>
-                `;
-            }
+        // ── main app controller ────────────────────────────────────────
+        const app = {
+            mode: 'web',
+            activeTab: 'daily',
+            pendingBundle: null,
+            selectedPayment: 'airtime',
 
-            /**
-             * Main menu display
-             * Shows all primary SMS bundle categories
-             */
-            showMainMenu() {
-                this.currentMenu = 'main';
-                this.menuHistory = [];
+            // ussd session state — full logic arrives in Phase 2
+            ussd: {
+                active:       false,
+                currentNode:  'root',
+                history:      [],
+                timerSecs:    20,
+                timerInterval: null,
+                recipientNum: null
+            },
 
-                const menuOptions = [
-                    { num: 0, text: 'Sh.20 (30 minutes, 3 hrs)' },
-                    { num: 1, text: 'Unlimited SMS' },
-                    { num: 2, text: 'Daily SMS' },
-                    { num: 3, text: 'Weekly SMS' },
-                    { num: 4, text: 'Monthly SMS' },
-                    { num: 5, text: 'My5 Unlimited SMS' },
-                    { num: 6, text: 'Buy for Other Number' },
-                    { num: 7, text: 'Check Balance' },
-                    { num: 8, text: 'Chat Ibambe' }
-                ];
+            // ── mode switching ─────────────────────────────────────────
+            setMode(mode) {
+                this.mode = mode;
+                document.getElementById('viewWeb').classList.toggle('active', mode === 'web');
+                document.getElementById('viewUssd').classList.toggle('active', mode === 'ussd');
+                document.getElementById('btnWebMode').classList.toggle('active', mode === 'web');
+                document.getElementById('btnUssdMode').classList.toggle('active', mode === 'ussd');
+            },
 
-                this.renderMenu('Safaricom SMS Bundles', '*188#', menuOptions);
-            }
-
-            /**
-             * Generic menu renderer
-             * Creates the visual menu structure with clickable items
-             */
-            renderMenu(title, code, options) {
-                let menuHTML = `
-                    <div class="screen-header">
-                        <h2>${title}</h2>
-                        <div class="code">${code}</div>
-                    </div>
-                    <div class="menu-content">
-                `;
-
-                options.forEach(option => {
-                    menuHTML += `
-                        <div class="menu-item" onclick="ussdApp.selectOption(${option.num})">
-                            <div class="menu-item-number">${option.num}</div>
-                            <div class="menu-item-text">${option.text}</div>
-                        </div>
-                    `;
+            // ── web mode tab switching ─────────────────────────────────
+            switchTab(tab) {
+                this.activeTab = tab;
+                document.querySelectorAll('.bundle-category').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.cat-tab').forEach(el => el.classList.remove('active'));
+                document.getElementById('tab-' + tab).classList.add('active');
+                // highlight matching tab button
+                document.querySelectorAll('.cat-tab').forEach(btn => {
+                    if (btn.textContent.toLowerCase().startsWith(tab)) btn.classList.add('active');
                 });
+            },
 
-                menuHTML += `</div>`;
+            // ── web purchase flow ──────────────────────────────────────
+            initiateWebPurchase(bundle) {
+                this.pendingBundle = bundle;
+                this.selectedPayment = 'airtime';
+                document.querySelector('#payAirtime').checked = true;
+                document.querySelector('#payMpesa').checked = false;
 
-                // Add back button if not on main menu
-                if (this.menuHistory.length > 0) {
-                    menuHTML += `
-                        <div class="action-buttons">
-                            <button class="btn btn-secondary" onclick="ussdApp.goBack()">← Back</button>
-                            <button class="btn btn-primary" onclick="ussdApp.showMainMenu()">Main Menu</button>
-                        </div>
+                const smsLabel = bundle.sms === 'Unlimited' ? 'Unlimited SMS' : bundle.sms + ' SMS';
+                document.getElementById('webModalBundleInfo').innerHTML = `
+                    <p><strong>Bundle:</strong> ${bundle.type} ${smsLabel}</p>
+                    <p><strong>Price:</strong> Ksh ${bundle.price.toFixed(2)}</p>
+                    <p><strong>Validity:</strong> ${bundle.validity}</p>
+                    <p><strong>Your Balance:</strong> Ksh ${account.balance.toFixed(2)}</p>
+                `;
+
+                const fupEl = document.getElementById('webModalFup');
+                fupEl.style.display = bundle.fup ? 'block' : 'none';
+
+                document.getElementById('webModalContent').style.display = 'block';
+                document.getElementById('webModalProcessing').classList.remove('active');
+                document.getElementById('webModal').classList.add('open');
+            },
+
+            selectPayment(method) {
+                this.selectedPayment = method;
+                document.getElementById('pay' + (method === 'airtime' ? 'Airtime' : 'Mpesa')).checked = true;
+            },
+
+            closeWebModal() {
+                document.getElementById('webModal').classList.remove('open');
+                this.pendingBundle = null;
+            },
+
+            confirmWebPurchase() {
+                const bundle = this.pendingBundle;
+                if (!bundle) return;
+
+                if (account.balance < bundle.price) {
+                    this.closeWebModal();
+                    this.showToast('Insufficient Balance',
+                        `Your balance (Ksh ${account.balance.toFixed(2)}) is too low for this bundle (Ksh ${bundle.price.toFixed(2)}).`,
+                        'error');
+                    return;
+                }
+
+                // show spinner
+                document.getElementById('webModalContent').style.display = 'none';
+                document.getElementById('webModalProcessing').classList.add('active');
+
+                // simulate processing delay
+                setTimeout(() => {
+                    account.balance -= bundle.price;
+                    const smsLabel = bundle.sms === 'Unlimited' ? 'Unlimited SMS' : bundle.sms + ' SMS';
+                    account.activeBundles.push(`${bundle.type} ${smsLabel}`);
+
+                    this.updateBalanceUI();
+                    this.closeWebModal();
+
+                    const payLabel = this.selectedPayment === 'mpesa' ? 'M-PESA' : 'Airtime';
+                    this.showToast(
+                        'Purchase Successful',
+                        `You have successfully purchased ${smsLabel}.\nKsh ${bundle.price.toFixed(2)} deducted via ${payLabel}.\nValid for ${bundle.validity}.`
+                    );
+                }, 2500);
+            },
+
+            // ── USSD dial button ───────────────────────────────────────
+            dialUssd() {
+                this.ussd.active = true;
+                this.ussd.currentNode = 'root';
+                this.ussd.history = [];
+                this.ussd.recipientNum = null;
+
+                document.getElementById('ussdBackdrop').classList.add('open');
+                document.getElementById('dialBtn').disabled = true;
+                document.getElementById('dialBtn').textContent = 'Session Active';
+
+                this.ussdRender(USSD_TREE['root']);
+                this.ussdStartTimer();
+                this.focusUssdInput();
+            },
+
+            // ── USSD render ────────────────────────────────────────────
+            // builds the content area for a given tree node
+            ussdRender(node) {
+                const content = document.getElementById('ussdContent');
+
+                // handle dynamic screens
+                if (node.dynamic === 'balance') {
+                    const bundleList = account.activeBundles.length
+                        ? account.activeBundles.join(', ')
+                        : 'None';
+                    content.innerHTML = `
+                        <div class="ussd-content-title">${node.title}</div>
+                        <div class="ussd-body-text">Airtime: Ksh ${account.balance.toFixed(2)}\nActive Bundles: ${bundleList}\n\nDial *188# to buy a bundle.</div>
                     `;
+                    this.ussdSetTerminal();
+                    return;
                 }
 
-                this.screen.innerHTML = menuHTML;
-            }
-
-            /**
-             * Handle option selection
-             * Routes to appropriate submenu or displays result
-             */
-            selectOption(optionNum) {
-                this.menuHistory.push(this.currentMenu);
-
-                // Route based on current menu and selected option
-                switch (this.currentMenu) {
-                    case 'main':
-                        this.handleMainMenuSelection(optionNum);
-                        break;
-                    case 'unlimited':
-                        this.handleUnlimitedSMSSelection(optionNum);
-                        break;
-                    case 'daily':
-                        this.handleDailySMSSelection(optionNum);
-                        break;
-                    case 'weekly':
-                        this.handleWeeklySMSSelection(optionNum);
-                        break;
-                    case 'monthly':
-                        this.handleMonthlySMSSelection(optionNum);
-                        break;
-                    case 'my5':
-                        this.handleMy5Selection(optionNum);
-                        break;
-                    case 'buyOther':
-                        this.handleBuyOtherSelection(optionNum);
-                        break;
-                    case 'chatIbambe':
-                        this.handleChatIbambeSelection(optionNum);
-                        break;
-                    default:
-                        this.showError('Invalid menu state');
+                // phone number input screen
+                if (node.inputType === 'phone') {
+                    content.innerHTML = `<div class="ussd-content-title">${node.title}</div>`;
+                    document.getElementById('ussdInputZone').style.display = 'block';
+                    const label = document.querySelector('.ussd-input-label');
+                    label.textContent = node.inputPrompt || 'Enter number:';
+                    const input = document.getElementById('ussdInputField');
+                    input.value = '';
+                    input.inputMode = 'tel';
+                    input.pattern = '[0-9]*';
+                    this.ussdShowActions();
+                    return;
                 }
-            }
 
-            /**
-             * Process main menu selections
-             * Determines which submenu or action to display
-             */
-            handleMainMenuSelection(option) {
-                switch (option) {
-                    case 0:
-                        this.showResult(
-                            'Bundle Selected',
-                            'You have successfully selected the Sh.20 (30 minutes, 3 hrs) offer.'
-                        );
-                        break;
-                    case 1:
-                        this.currentMenu = 'unlimited';
-                        this.renderMenu('Unlimited SMS', '*188# > 1', [
-                            { num: 1, text: 'Unlimited SMS daily at Ksh 20' },
-                            { num: 2, text: 'Unlimited SMS Weekly at Ksh 50' }
-                        ]);
-                        break;
-                    case 2:
-                        this.currentMenu = 'daily';
-                        this.renderMenu('Daily SMS', '*188# > 2', [
-                            { num: 1, text: '20 SMS daily at Ksh 5' },
-                            { num: 2, text: '200 SMS daily at Ksh 10' },
-                            { num: 3, text: 'Unlimited SMS daily at Ksh 20' },
-                            { num: 4, text: 'Unsubscribe' }
-                        ]);
-                        break;
-                    case 3:
-                        this.currentMenu = 'weekly';
-                        this.renderMenu('Weekly SMS', '*188# > 3', [
-                            { num: 1, text: '100 SMS weekly at Ksh 20' },
-                            { num: 2, text: '1000 SMS weekly at Ksh 30' },
-                            { num: 3, text: 'Unlimited SMS weekly at Ksh 50' },
-                            { num: 4, text: 'Unsubscribe' }
-                        ]);
-                        break;
-                    case 4:
-                        this.currentMenu = 'monthly';
-                        this.renderMenu('Monthly SMS', '*188# > 4', [
-                            { num: 1, text: '1500 SMS Monthly at Ksh 100' },
-                            { num: 2, text: '3500 SMS Monthly at Ksh 200' },
-                            { num: 3, text: 'Unsubscribe' }
-                        ]);
-                        break;
-                    case 5:
-                        this.currentMenu = 'my5';
-                        this.renderMenu('My5 Unlimited SMS', '*188# > 5', [
-                            { num: 1, text: 'Manage My5 List' },
-                            { num: 2, text: 'FAQs' }
-                        ]);
-                        break;
-                    case 6:
-                        this.currentMenu = 'buyOther';
-                        this.renderMenu('Buy for Other Number', '*188# > 6', [
-                            { num: 1, text: 'Buy Daily SMS Bundle' },
-                            { num: 2, text: 'Buy Weekly SMS Bundle' },
-                            { num: 3, text: 'Buy Monthly SMS Bundle' },
-                            { num: 4, text: 'Unsubscribe' }
-                        ]);
-                        break;
-                    case 7:
-                        this.showResult(
-                            'Balance Check',
-                            'You will receive an SMS shortly with your balance details. Dial 200 for other services. Thank you!'
-                        );
-                        break;
-                    case 8:
-                        this.currentMenu = 'chatIbambe';
-                        this.renderMenu('Chat Ibambe', '*188# > 8', [
-                            { num: 1, text: 'Check My SMS Target' },
-                            { num: 2, text: 'Check my Daily SMS Spend' },
-                            { num: 3, text: 'Check my SMS Bonus Balance' },
-                            { num: 4, text: 'Unsubscribe' }
-                        ]);
-                        break;
-                    default:
-                        this.showError('Invalid option selected. Please try again.');
+                // standard menu screen
+                let menuText = '';
+                if (node.body) menuText = node.body + '\n\n';
+                if (node.items) {
+                    node.items.forEach(item => { menuText += item.key + '. ' + item.text + '\n'; });
                 }
-            }
 
-            /**
-             * Handle Unlimited SMS submenu selections
-             */
-            handleUnlimitedSMSSelection(option) {
-                const messages = {
-                    1: 'You have successfully selected the Unlimited SMS daily at Ksh 20.',
-                    2: 'You have successfully selected the Unlimited SMS Weekly at Ksh 50.'
-                };
-
-                if (messages[option]) {
-                    this.showResult('Bundle Activated', messages[option]);
-                } else {
-                    this.showError('Invalid selection. Please choose option 1 or 2.');
-                }
-            }
-
-            /**
-             * Handle Daily SMS submenu selections
-             */
-            handleDailySMSSelection(option) {
-                const messages = {
-                    1: 'You have successfully selected 20 SMS daily at Ksh 5.',
-                    2: 'You have successfully selected 200 SMS daily at Ksh 10.',
-                    3: 'You have successfully selected Unlimited SMS daily at Ksh 20.',
-                    4: 'You have been successfully unsubscribed from this service.'
-                };
-
-                if (messages[option]) {
-                    const title = option === 4 ? 'Unsubscribed' : 'Bundle Activated';
-                    this.showResult(title, messages[option]);
-                } else {
-                    this.showError('Invalid selection. Please choose a valid option.');
-                }
-            }
-
-            /**
-             * Handle Weekly SMS submenu selections
-             */
-            handleWeeklySMSSelection(option) {
-                const messages = {
-                    1: 'You have successfully selected 100 SMS weekly at Ksh 20.',
-                    2: 'You have successfully selected 1000 SMS weekly at Ksh 30.',
-                    3: 'You have successfully selected Unlimited SMS weekly at Ksh 50.',
-                    4: 'You have been successfully unsubscribed from this service.'
-                };
-
-                if (messages[option]) {
-                    const title = option === 4 ? 'Unsubscribed' : 'Bundle Activated';
-                    this.showResult(title, messages[option]);
-                } else {
-                    this.showError('Invalid selection. Please choose a valid option.');
-                }
-            }
-
-            /**
-             * Handle Monthly SMS submenu selections
-             */
-            handleMonthlySMSSelection(option) {
-                const messages = {
-                    1: 'You have successfully selected 1500 SMS Monthly at Ksh 100.',
-                    2: 'You have successfully selected 3500 SMS Monthly at Ksh 200.',
-                    3: 'You have been successfully unsubscribed from this service.'
-                };
-
-                if (messages[option]) {
-                    const title = option === 3 ? 'Unsubscribed' : 'Bundle Activated';
-                    this.showResult(title, messages[option]);
-                } else {
-                    this.showError('Invalid selection. Please choose a valid option.');
-                }
-            }
-
-            /**
-             * Handle My5 Unlimited SMS selections
-             */
-            handleMy5Selection(option) {
-                const messages = {
-                    1: 'Manage My5 List: Add 5 numbers under this option to enjoy unlimited SMS to your 5 favorite numbers.',
-                    2: 'FAQs: Visit our website or customer care for frequently asked questions about My5 service.'
-                };
-
-                if (messages[option]) {
-                    this.showResult('My5 Service', messages[option]);
-                } else {
-                    this.showError('Invalid selection. Please choose option 1 or 2.');
-                }
-            }
-
-            /**
-             * Handle Buy for Other Number selections
-             */
-            handleBuyOtherSelection(option) {
-                const messages = {
-                    1: 'You have successfully selected to buy a Daily SMS Bundle for another number.',
-                    2: 'You have successfully selected to buy a Weekly SMS Bundle for another number.',
-                    3: 'You have successfully selected to buy a Monthly SMS Bundle for another number.',
-                    4: 'You have been successfully unsubscribed from this service.'
-                };
-
-                if (messages[option]) {
-                    const title = option === 4 ? 'Unsubscribed' : 'Gift Bundle';
-                    this.showResult(title, messages[option]);
-                } else {
-                    this.showError('Invalid selection. Please choose a valid option.');
-                }
-            }
-
-            /**
-             * Handle Chat Ibambe selections
-             */
-            handleChatIbambeSelection(option) {
-                const messages = {
-                    1: 'Your SMS target details will be sent to you shortly via SMS.',
-                    2: 'Your daily SMS expenditure details will be sent to you shortly via SMS.',
-                    3: 'Your SMS Bonus balance will be sent to you shortly via SMS.',
-                    4: 'You have been successfully unsubscribed from Chat Ibambe service.'
-                };
-
-                if (messages[option]) {
-                    const title = option === 4 ? 'Unsubscribed' : 'Information Request';
-                    this.showResult(title, messages[option]);
-                } else {
-                    this.showError('Invalid selection. Please choose a valid option.');
-                }
-            }
-
-            /**
-             * Display success/result message
-             */
-            showResult(title, message) {
-                this.screen.innerHTML = `
-                    <div class="screen-header">
-                        <h2>${title}</h2>
-                    </div>
-                    <div class="result-message">
-                        <h3>✓ Success</h3>
-                        <p>${message}</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn btn-secondary" onclick="ussdApp.goBack()">← Back</button>
-                        <button class="btn btn-primary" onclick="ussdApp.showMainMenu()">Main Menu</button>
-                    </div>
+                content.innerHTML = `
+                    <div class="ussd-content-title">${node.title}</div>
+                    <pre class="ussd-menu-text">${menuText.trimEnd()}</pre>
                 `;
-            }
 
-            /**
-             * Display error message
-             */
-            showError(message) {
-                this.screen.innerHTML = `
-                    <div class="screen-header">
-                        <h2>Error</h2>
-                    </div>
-                    <div class="error-message">
-                        ${message}
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn btn-secondary" onclick="ussdApp.goBack()">← Back</button>
-                        <button class="btn btn-primary" onclick="ussdApp.showMainMenu()">Main Menu</button>
-                    </div>
+                if (node.terminal) {
+                    this.ussdSetTerminal();
+                } else {
+                    document.getElementById('ussdInputZone').style.display = 'block';
+                    const label = document.querySelector('.ussd-input-label');
+                    label.textContent = 'Reply with a number:';
+                    const input = document.getElementById('ussdInputField');
+                    input.value = '';
+                    input.inputMode = 'numeric';
+                    input.pattern = '[0-9]*';
+                    this.ussdShowActions();
+                }
+            },
+
+            ussdSetTerminal() {
+                // terminal screen: no input, no send button
+                document.getElementById('ussdInputZone').style.display = 'none';
+                document.getElementById('sessionTimerWrap').style.display = 'none';
+                const actions = document.getElementById('ussdActionsBar');
+                actions.innerHTML = `<button class="ussd-cancel" style="flex:1" onclick="app.ussdClose()">Close</button>`;
+            },
+
+            ussdShowActions() {
+                document.getElementById('sessionTimerWrap').style.display = 'block';
+                document.getElementById('ussdActionsBar').innerHTML = `
+                    <button class="ussd-cancel" onclick="app.ussdCancel()">Cancel</button>
+                    <button class="ussd-send" onclick="app.ussdSend()">Send</button>
                 `;
-            }
+            },
 
-            /**
-             * Navigate back to previous menu
-             */
-            goBack() {
-                if (this.menuHistory.length > 0) {
-                    const previousMenu = this.menuHistory.pop();
-                    this.currentMenu = previousMenu;
+            // ── USSD Send handler ──────────────────────────────────────
+            ussdSend() {
+                const input = document.getElementById('ussdInputField');
+                const val = input.value.trim();
+                input.value = '';
+                this.ussdResetTimer();
 
-                    // Redisplay the appropriate menu based on history
-                    if (previousMenu === 'main') {
-                        this.showMainMenu();
-                    } else {
-                        // For simplicity, return to main menu if complex history
-                        this.showMainMenu();
+                const node = USSD_TREE[this.ussd.currentNode];
+
+                // phone number entry screens
+                if (node && node.inputType === 'phone') {
+                    if (!/^07\d{8}$/.test(val) && !/^01\d{8}$/.test(val)) {
+                        this.ussdShowError('Invalid phone number.\nEnter a valid Safaricom number (07xxxxxxxx).');
+                        return;
                     }
-                } else {
-                    this.showMainMenu();
+                    this.ussd.recipientNum = val;
+                    this.ussd.history.push(this.ussd.currentNode);
+                    this.ussd.currentNode = node.next;
+                    this.ussdRender(USSD_TREE[node.next]);
+                    this.focusUssdInput();
+                    return;
                 }
+
+                // must be numeric for menu screens
+                if (!/^\d+$/.test(val)) {
+                    this.ussdShowError('Invalid input.\nPlease reply with a number.');
+                    return;
+                }
+
+                if (!node || !node.items) {
+                    this.ussdShowError('Invalid choice.\n\n1. Main Menu');
+                    return;
+                }
+
+                const item = node.items.find(i => i.key === val);
+                if (!item) {
+                    this.ussdShowError(`Invalid choice.\nPlease enter a number\nbetween 1 and ${node.items.length}.`);
+                    return;
+                }
+
+                // handle actions
+                if (item.action === 'purchase' || item.action === 'purchase_other') {
+                    this.ussd.history.push(this.ussd.currentNode);
+                    this.ussdShowConfirm(item.meta, item.action === 'purchase_other');
+                    return;
+                }
+
+                if (item.action === 'unsubscribe') {
+                    this.ussdShowProcessing(() => this.ussdShowSuccess('You have been unsubscribed from all SMS bundles.'));
+                    return;
+                }
+
+                // navigate to next node
+                if (item.next) {
+                    this.ussd.history.push(this.ussd.currentNode);
+                    this.ussd.currentNode = item.next;
+                    this.ussdRender(USSD_TREE[item.next]);
+                    this.focusUssdInput();
+                }
+            },
+
+            // ── USSD confirm purchase screen ───────────────────────────
+            ussdShowConfirm(meta, isGift) {
+                const recipientLine = isGift && this.ussd.recipientNum
+                    ? `\nRecipient: ${this.ussd.recipientNum}` : '';
+                const fupLine = meta.fup ? '\n(FUP: 1000 SMS/day)' : '';
+                const smsLabel = meta.sms === 'Unlimited' ? 'Unlimited SMS' : meta.sms + ' SMS';
+
+                document.getElementById('ussdContent').innerHTML = `
+                    <div class="ussd-content-title">Confirm Purchase</div>
+                    <pre class="ussd-menu-text">${smsLabel} @ Ksh ${meta.price}${fupLine}${recipientLine}
+
+1. Confirm
+2. Cancel</pre>
+                `;
+
+                document.getElementById('ussdInputZone').style.display = 'block';
+                document.querySelector('.ussd-input-label').textContent = 'Reply with a number:';
+                document.getElementById('ussdInputField').value = '';
+
+                this.ussdShowActions();
+
+                // override Send for this confirmation step
+                this._confirmMeta = meta;
+                this._confirmIsGift = isGift;
+                this._inConfirm = true;
+            },
+
+            // ── USSD payment method screen ─────────────────────────────
+            ussdShowPayment(meta, isGift) {
+                document.getElementById('ussdContent').innerHTML = `
+                    <div class="ussd-content-title">Payment Method</div>
+                    <pre class="ussd-menu-text">1. Airtime\n2. M-PESA</pre>
+                `;
+
+                document.getElementById('ussdInputZone').style.display = 'block';
+                document.querySelector('.ussd-input-label').textContent = 'Reply with a number:';
+                document.getElementById('ussdInputField').value = '';
+                this.ussdShowActions();
+
+                this._paymentMeta = meta;
+                this._paymentIsGift = isGift;
+                this._inPayment = true;
+            },
+
+            // ── USSD processing screen ─────────────────────────────────
+            ussdShowProcessing(onComplete) {
+                this.ussdStopTimer();
+                document.getElementById('ussdInputZone').style.display = 'none';
+                document.getElementById('sessionTimerWrap').style.display = 'none';
+                document.getElementById('ussdActionsBar').innerHTML = '';
+
+                document.getElementById('ussdContent').innerHTML = `
+                    <div class="ussd-processing">
+                        <p>Processing request</p>
+                        <p>Please wait...</p>
+                        <div class="dots" style="margin-top:10px">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                `;
+
+                setTimeout(onComplete, 2500);
+            },
+
+            // ── USSD success screen ────────────────────────────────────
+            ussdShowSuccess(message) {
+                document.getElementById('ussdContent').innerHTML = `
+                    <div class="ussd-body-text">${message}</div>
+                `;
+                this.ussdSetTerminal();
+            },
+
+            // ── USSD error screen ──────────────────────────────────────
+            ussdShowError(message) {
+                const content = document.getElementById('ussdContent');
+                content.innerHTML = `
+                    <div class="ussd-content-title">Error</div>
+                    <pre class="ussd-menu-text">${message}</pre>
+                `;
+                this.ussdShowActions();
+                this.focusUssdInput();
+            },
+
+            // ── USSD Cancel button ─────────────────────────────────────
+            ussdCancel() {
+                this.ussdClose();
+            },
+
+            ussdClose() {
+                this.ussdStopTimer();
+                this.ussd.active = false;
+                this._inConfirm = false;
+                this._inPayment = false;
+                document.getElementById('ussdBackdrop').classList.remove('open');
+                const btn = document.getElementById('dialBtn');
+                btn.disabled = false;
+                btn.textContent = 'Dial *188#';
+            },
+
+            // ── keyboard: Enter = Send ─────────────────────────────────
+            ussdKeydown(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    // route through confirm/payment state if active
+                    if (this._inConfirm) {
+                        this.ussdHandleConfirmReply();
+                    } else if (this._inPayment) {
+                        this.ussdHandlePaymentReply();
+                    } else {
+                        this.ussdSend();
+                    }
+                }
+                this.ussdResetTimer();
+            },
+
+            // intercept Send when in confirm state
+            ussdHandleConfirmReply() {
+                const val = document.getElementById('ussdInputField').value.trim();
+                document.getElementById('ussdInputField').value = '';
+                this._inConfirm = false;
+
+                if (val === '1') {
+                    this.ussdShowPayment(this._confirmMeta, this._confirmIsGift);
+                } else if (val === '2') {
+                    // cancelled — go back to previous menu
+                    const prev = this.ussd.history.pop();
+                    this.ussd.currentNode = prev || 'root';
+                    this.ussdRender(USSD_TREE[this.ussd.currentNode]);
+                    this.focusUssdInput();
+                } else {
+                    this._inConfirm = true;
+                    this.ussdShowError('Invalid choice.\n\n1. Confirm\n2. Cancel');
+                }
+            },
+
+            ussdHandlePaymentReply() {
+                const val = document.getElementById('ussdInputField').value.trim();
+                document.getElementById('ussdInputField').value = '';
+                this._inPayment = false;
+
+                if (val !== '1' && val !== '2') {
+                    this._inPayment = true;
+                    this.ussdShowError('Invalid choice.\n\n1. Airtime\n2. M-PESA');
+                    return;
+                }
+
+                const meta = this._paymentMeta;
+                const isGift = this._paymentIsGift;
+
+                if (account.balance < meta.price) {
+                    this.ussdShowSuccess(
+                        `Insufficient balance.\nYour balance is Ksh ${account.balance.toFixed(2)}.\nBundle costs Ksh ${meta.price}.\n\nPlease top up and try again.`
+                    );
+                    return;
+                }
+
+                // deduct and complete purchase
+                this.ussdShowProcessing(() => {
+                    account.balance -= meta.price;
+                    const smsLabel = meta.sms === 'Unlimited' ? 'Unlimited SMS' : meta.sms + ' SMS';
+                    const payLabel = val === '2' ? 'M-PESA' : 'Airtime';
+                    account.activeBundles.push(`${meta.type} ${smsLabel}`);
+                    this.updateBalanceUI();
+
+                    let successMsg;
+                    if (isGift && this.ussd.recipientNum) {
+                        successMsg = `You have successfully\npurchased ${smsLabel}\nfor ${this.ussd.recipientNum}.\nKsh ${meta.price} deducted\nvia ${payLabel}.\nValid for ${meta.validity}.`;
+                    } else {
+                        successMsg = `You have successfully\npurchased ${smsLabel}.\nKsh ${meta.price} deducted\nvia ${payLabel}.\nValid for ${meta.validity}.\n\nThank you.`;
+                    }
+                    this.ussdShowSuccess(successMsg);
+                });
+            },
+
+            // ── override ussdSend to route through states ──────────────
+            // wrap the real send so confirm/payment intercepts work
+            _wrappedSend() {
+                if (this._inConfirm) {
+                    this.ussdHandleConfirmReply();
+                } else if (this._inPayment) {
+                    this.ussdHandlePaymentReply();
+                } else {
+                    this.ussdSend();
+                }
+            },
+
+            // ── session timer ──────────────────────────────────────────
+            ussdStartTimer() {
+                this.ussd.timerSecs = 20;
+                this.ussdUpdateTimerUI();
+                this.ussd.timerInterval = setInterval(() => {
+                    this.ussd.timerSecs--;
+                    this.ussdUpdateTimerUI();
+                    if (this.ussd.timerSecs <= 0) {
+                        this.ussdTimeout();
+                    }
+                }, 1000);
+            },
+
+            ussdResetTimer() {
+                this.ussd.timerSecs = 20;
+                this.ussdUpdateTimerUI();
+            },
+
+            ussdStopTimer() {
+                clearInterval(this.ussd.timerInterval);
+            },
+
+            ussdUpdateTimerUI() {
+                const bar = document.getElementById('sessionBarFill');
+                const label = document.getElementById('sessionCountdown');
+                if (!bar || !label) return;
+                const pct = (this.ussd.timerSecs / 20) * 100;
+                bar.style.width = pct + '%';
+                // turn bar red when under 6 seconds
+                bar.style.background = this.ussd.timerSecs <= 6 ? '#D32F2F' : 'var(--coral)';
+                label.textContent = this.ussd.timerSecs + 's';
+            },
+
+            ussdTimeout() {
+                this.ussdStopTimer();
+                document.getElementById('ussdContent').innerHTML = `
+                    <div class="ussd-body-text">Session expired\nPlease dial again.</div>
+                `;
+                this.ussdSetTerminal();
+            },
+
+            // ── focus helper ───────────────────────────────────���───────
+            focusUssdInput() {
+                setTimeout(() => {
+                    const input = document.getElementById('ussdInputField');
+                    if (input) input.focus();
+                }, 60);
+            },
+
+            // ── balance UI sync ────────────────────────────────────────
+            updateBalanceUI() {
+                const fmt = 'Ksh ' + account.balance.toFixed(2);
+                const el1 = document.getElementById('topBarBalance');
+                const el2 = document.getElementById('webBalance');
+                const el3 = document.getElementById('webActiveBundles');
+                if (el1) el1.textContent = fmt;
+                if (el2) el2.textContent = fmt;
+                if (el3) el3.textContent = account.activeBundles.length
+                    ? account.activeBundles.slice(-1)[0]
+                    : 'None';
+            },
+
+            // ── toast notifications ────────────────────────────────────
+            showToast(title, body, type = 'success') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = 'toast' + (type === 'error' ? ' error' : '');
+                toast.innerHTML = `<div class="toast-title">${title}</div><div class="toast-body">${body.replace(/\n/g, '<br>')}</div>`;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 5000);
             }
+        };
+
+        // ── send button routes through state machine ───────────────────
+        // patch the HTML send button onclick to use the wrapper
+        document.addEventListener('DOMContentLoaded', () => {
+            // keep send button in sync with state routing
+            const sendBtn = document.querySelector('.ussd-send');
+            if (sendBtn) sendBtn.onclick = () => app._wrappedSend();
+        });
+
+        // override ussdShowActions to wire send to wrapper
+        const _origShowActions = app.ussdShowActions.bind(app);
+        app.ussdShowActions = function() {
+            _origShowActions();
+            // re-attach wrapper after innerHTML is replaced
+            const sendBtn = document.getElementById('ussdActionsBar')?.querySelector('.ussd-send');
+            if (sendBtn) sendBtn.onclick = () => app._wrappedSend();
+        };
+
+        // ── clock for phone status bar and home screen ─────────────────
+        function updateClock() {
+            const now = new Date();
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            const timeStr = hh + ':' + mm;
+
+            const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            const months = ['January','February','March','April','May','June',
+                            'July','August','September','October','November','December'];
+            const dateStr = days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()];
+
+            const pt = document.getElementById('phoneTime');
+            const ht = document.getElementById('homeTime');
+            const hd = document.getElementById('homeDate');
+            if (pt) pt.textContent = timeStr;
+            if (ht) ht.textContent = timeStr;
+            if (hd) hd.textContent = dateStr;
         }
 
-        // Initialize the application when page loads
-        const ussdApp = new SafaricomUSSD();
+        updateClock();
+        setInterval(updateClock, 30000);
     </script>
-</body>
 
+</body>
 </html>

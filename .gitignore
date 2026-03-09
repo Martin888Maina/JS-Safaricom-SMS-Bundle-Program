@@ -1,0 +1,14 @@
+# implementation guides — kept local only
+CLAUDE.md
+safaricom_sms_addendum.md
+ussd_ui_spec.md
+test.md
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# editor folders
+.vscode/
+.idea/
