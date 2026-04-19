@@ -119,14 +119,14 @@ git clone https://github.com/Martin888Maina/JS-Safaricom-SMS-Bundle-Program.git
 cd JS-Safaricom-SMS-Bundle-Program
 ```
 
-Open `Index.html` in any modern web browser. No server, build tools, or internet connection required (fonts load from Google Fonts if available).
+Open `index.html` in any modern web browser. No server, build tools, or internet connection required (fonts load from Google Fonts if available).
 
 ---
 
 ## Usage
 
 **Web Mode:**
-1. Open `Index.html` in a browser
+1. Open `index.html` in a browser
 2. Use the top-up field in the account strip to adjust your simulated balance if needed
 3. Select a bundle tab: Daily, Weekly, or Monthly
 4. Click "Buy Now" on the desired bundle
@@ -148,7 +148,7 @@ Open `Index.html` in any modern web browser. No server, build tools, or internet
 
 - HTML5, CSS3, JavaScript ES6+ — no frameworks or build tools
 - Google Fonts: Inter and Poppins
-- Single file: `Index.html`
+- Single file: `index.html`
 
 ---
 
@@ -156,7 +156,7 @@ Open `Index.html` in any modern web browser. No server, build tools, or internet
 
 ```
 JS-Safaricom-SMS-Bundle-Program/
-├── Index.html                  Main application file
+├── index.html                  Main application file
 ├── favicon.png                 Project favicon
 ├── README.md                   Project documentation
 ├── LICENSE                     MIT License
