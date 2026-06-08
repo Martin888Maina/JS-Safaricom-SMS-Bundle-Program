@@ -242,7 +242,6 @@
 
         .acct-item .acct-value.balance-positive { color: #1A7A4A; }
 
-        /* top-up row inside account strip */
         .topup-row {
             display: flex;
             align-items: center;
@@ -406,7 +405,6 @@
         .buy-btn:hover  { background: var(--coral-dark); }
         .buy-btn:active { transform: scale(0.97); }
 
-        /* ripple on buy-btn click */
         .buy-btn .ripple {
             position: absolute;
             border-radius: 50%;
@@ -646,7 +644,6 @@
             padding-top: 12px;
         }
 
-        /* control panel above phone */
         .ussd-controls {
             background: var(--white);
             border: 1px solid var(--border);
@@ -672,7 +669,6 @@
             user-select: none;
         }
 
-        /* custom toggle switch */
         .toggle-switch {
             position: relative;
             width: 36px;
@@ -751,7 +747,6 @@
         .dial-btn:active { transform: scale(0.97); }
         .dial-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
 
-        /* phone frame */
         .phone-wrap {
             background: #1A1A1A;
             border-radius: 44px;
@@ -788,7 +783,6 @@
         .signal-bars span:nth-child(2) { height: 6px;  }
         .signal-bars span:nth-child(3) { height: 9px;  }
         .signal-bars span:nth-child(4) { height: 12px; }
-        /* active bars light up */
         .signal-bars span.active { background: #fff; }
 
         .status-network { color: #fff; font-size: 0.7rem; font-weight: 600; }
@@ -836,7 +830,6 @@
             justify-content: center;
         }
 
-        /* home wallpaper */
         .phone-home {
             width: 100%;
             min-height: 520px;
@@ -935,7 +928,6 @@
             to   { opacity: 1; transform: scale(1)    translateY(0);   }
         }
 
-        /* screen content fade between transitions */
         .ussd-content.transitioning {
             animation: screenFade 0.18s ease-out;
         }
@@ -1034,7 +1026,6 @@
             60%       { transform: translateX(5px); }
         }
 
-        /* session countdown */
         .session-timer-wrap { padding: 6px 14px 4px; }
 
         .session-timer-label {
@@ -1113,7 +1104,6 @@
         .ussd-send:hover  { background: var(--coral-dark); }
         .ussd-send:active { transform: scale(0.97); }
 
-        /* processing dots */
         .ussd-processing {
             text-align: center;
             padding: 24px 14px;
@@ -1302,7 +1292,6 @@
                 <label>Last Bundle</label>
                 <div class="acct-value" id="webActiveBundles">None</div>
             </div>
-            <!-- top-up control -->
             <div class="topup-row">
                 <span class="topup-label">Top up:</span>
                 <input
@@ -1330,7 +1319,6 @@
             <button class="cat-tab"        onclick="app.switchTab('monthly')">Monthly</button>
         </div>
 
-        <!-- daily -->
         <div class="bundle-grid bundle-category active" id="tab-daily">
             <div class="bundle-card">
                 <div class="bundle-sms-count">20 <span>SMS</span></div>
@@ -1353,7 +1341,6 @@
             </div>
         </div>
 
-        <!-- weekly -->
         <div class="bundle-grid bundle-category" id="tab-weekly">
             <div class="bundle-card">
                 <div class="bundle-sms-count">100 <span>SMS</span></div>
@@ -1376,7 +1363,6 @@
             </div>
         </div>
 
-        <!-- monthly -->
         <div class="bundle-grid bundle-category" id="tab-monthly">
             <div class="bundle-card">
                 <div class="bundle-sms-count">1,500 <span>SMS</span></div>
@@ -1392,7 +1378,6 @@
             </div>
         </div>
 
-        <!-- purchase history -->
         <div class="history-panel" id="historyPanel">
             <div class="history-panel-title">Purchase History</div>
             <div id="historyBody">
@@ -1408,7 +1393,6 @@
 <div id="viewUssd" class="view">
     <div class="app-body ussd-view">
 
-        <!-- control panel -->
         <div class="ussd-controls">
             <div style="font-size:0.8rem; color:var(--text-mid);">
                 <strong style="color:var(--text);">USSD Simulator</strong> &mdash;
@@ -1429,7 +1413,6 @@
             <button class="dial-btn" id="dialBtn" onclick="app.dialUssd()">Dial *188#</button>
         </div>
 
-        <!-- phone frame -->
         <div class="phone-wrap">
             <div class="phone-status-bar">
                 <span class="status-time" id="phoneTime">12:00</span>
@@ -1447,14 +1430,12 @@
             <div class="phone-notch"></div>
 
             <div class="phone-screen" id="phoneScreen">
-                <!-- home screen wallpaper -->
                 <div class="phone-home" id="phoneHome">
                     <div class="home-time" id="homeTime">12:00</div>
                     <div class="home-date" id="homeDate">Mon, 9 March</div>
                     <div class="home-hint">Tap "Dial *188#" above to start a session</div>
                 </div>
 
-                <!-- SMS notification banner -->
                 <div class="sms-notification" id="smsNotification" aria-live="polite">
                     <div class="sms-notif-header">
                         <div class="sms-notif-dot"></div>
@@ -1464,7 +1445,6 @@
                     <div class="sms-notif-body" id="notifBody"></div>
                 </div>
 
-                <!-- USSD dialog overlay -->
                 <div class="ussd-backdrop" id="ussdBackdrop">
                     <div class="ussd-dialog" id="ussdDialog">
 
@@ -1491,7 +1471,6 @@
                             />
                         </div>
 
-                        <!-- session countdown bar -->
                         <div class="session-timer-wrap" id="sessionTimerWrap">
                             <div class="session-timer-label">
                                 <span>Session</span>
@@ -1516,7 +1495,6 @@
     </div>
 </div><!-- /viewUssd -->
 
-<!-- web purchase confirm modal -->
 <div class="modal-backdrop" id="webModal" role="dialog" aria-modal="true" aria-labelledby="webModalHeading">
     <div class="modal-box">
         <div class="modal-form-content" id="webModalContent">
@@ -1553,10 +1531,8 @@
     </div>
 </div>
 
-<!-- toast container -->
 <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
-<!-- site footer -->
 <footer class="site-footer">
     <div class="footer-inner">
         <div class="footer-row">
@@ -1586,7 +1562,7 @@
 
 <script>
 // ── bundle catalogue ──────────────────────────────────────────────
-// source: safaricom_sms_addendum.md §2
+// source: Safaricom SMS Bundles T&C, §2 (August 2023)
 const BUNDLES = {
     daily: [
         { sms: '20',        price: 5,   validity: '24 hours', type: 'Daily'            },
@@ -1732,7 +1708,6 @@ const ussdUI = {
     get barFill()    { return document.getElementById('sessionBarFill');  },
     get countdown()  { return document.getElementById('sessionCountdown'); },
 
-    // animate the content area when screens change
     _transition(renderFn) {
         const el = this.content;
         el.classList.remove('transitioning');
@@ -1772,7 +1747,6 @@ const ussdUI = {
         setTimeout(() => this.inputField && this.inputField.focus(), 60);
     },
 
-    // shake the input to signal invalid entry
     shakeInput() {
         const el = this.inputField;
         el.classList.remove('shake');
@@ -2013,7 +1987,6 @@ const app = {
 
     // ── web purchase ─────────────────────────────────────────────
     initiateWebPurchase(bundle, btnEl) {
-        // ripple effect on the button
         if (btnEl) {
             const r   = document.createElement('span');
             r.className = 'ripple';
@@ -2312,7 +2285,6 @@ const app = {
     syncBalanceUI() {
         const fmt = 'Ksh ' + account.balance.toFixed(2);
 
-        // top bar chip — flash updated class
         const chip = document.getElementById('topBarBalance');
         if (chip) {
             chip.textContent = fmt;
@@ -2356,7 +2328,6 @@ document.addEventListener('DOMContentLoaded', () => {
         timer.reset();
     });
 
-    // Escape closes the web modal or the USSD session
     document.addEventListener('keydown', e => {
         if (e.key !== 'Escape') return;
         const modal = document.getElementById('webModal');
@@ -2386,7 +2357,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // move focus into modal when it opens
     const openObserver = new MutationObserver(() => {
         const modal = document.getElementById('webModal');
         if (modal.classList.contains('open')) {
